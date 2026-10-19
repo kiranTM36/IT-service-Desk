@@ -11,6 +11,7 @@ const createTicketTable = () => {
     priority ENUM( 'high' , 'medium' , 'low' ) DEFAULT 'medium',
     status BOOLEAN DEFAULT 0 ,
     createdAt DATETIME DEFAULT CURRENT_DATE,
+    image VARCHAR(255),
 
     FOREIGN KEY (cId) REFERENCES  category(id),
     FOREIGN KEY (userID) REFERENCES  user(id)

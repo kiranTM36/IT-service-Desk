@@ -18,7 +18,7 @@ const signUp = (req, res) => {
         const hashPassword = bcrypt.hashSync(password, genSalt)
 
         const sql = `
-            INSERT INTO users (username , email  , password) VALUES (?,?,?)
+            INSERT INTO user (username , email  , password) VALUES (?,?,?)
         `
 
         db.query(sql, [username, email, hashPassword], (err, result) => {
@@ -63,7 +63,7 @@ const login = (req, res) => {
         }
 
         const sql = `
-            SELECT * FROM users WHERE email=?
+            SELECT * FROM user WHERE email=?
         `
 
         db.query(sql, [email], (err, result) => {
@@ -128,6 +128,122 @@ const login = (req, res) => {
     }
 }
 
+const getAllUser = (req , res) => {
+    try {
+        const sql = `
+        SELECT u.*, r.* FROM user u JOIN role r ON u.roleId = r.id
+        `
+
+        db.query(sql , (err , result) => {
+            if (err) {
+                console.log("GetAllUser error : ", err);
+                return res.status(500).json({
+                    message: "error",
+                    success: false
+                })
+            }
+            if(result.length === 0){
+                return res.status(404).json({
+                    message : "NO user Found",
+                    success : false
+                })
+            }
+
+            res.status(200).json({
+                message : "List of user",
+                success : true ,
+                data : result
+            })
+
+        })
+    } catch (error) {
+        console.log("GetAllUser error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+
+const getSingleUser = (req , res) => {
+    try {
+        const {id} = req.params
+        const sql = `
+        SELECT u.*, r.* FROM user u JOIN role r ON u.roleId = r.id WHERE u.id = ?
+        `
+
+        db.query(sql ,[id], (err , result) => {
+            if (err) {
+                console.log("GetSingleUser error : ", err);
+                return res.status(500).json({
+                    message: "error",
+                    success: false
+                })
+            }
+            if(result.length === 0){
+                return res.status(404).json({
+                    message : "NO user Found",
+                    success : false
+                })
+            }
+
+            res.status(200).json({
+                message : "List of user",
+                success : true ,
+                data : result[0]
+            })
+
+        })
+    } catch (error) {
+        console.log("GetSingleUser error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+
+const deleteUser = ( req , res) => {
+    try {
+        const {id} = req.params
+        
+        const sql = `
+        UPDATE user SET status = !status WHERE id=?
+        `
+
+        db.query(sql , [id] , (err , result) => {
+            if(err){
+                console.log("DeleteUser error : ", err);
+                return res.status(500).json({
+                    message: "error",
+                    success: false
+                })
+            }
+            if(result.length === 0){
+                return res.status(404).json({
+                    message : "NO user Found",
+                    success : false
+                })
+            }
+
+            res.status(200).json({
+                message : "Deleted Successfully",
+                success : true ,
+                data : result[0]
+            })
+        } )
+    } catch (error) {
+        console.log("GetSingleUser error:", error);
+
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
+    }
+}
+
 module.exports = {
-    signUp , login
+    signUp , login , getAllUser , getSingleUser , deleteUser
 }
