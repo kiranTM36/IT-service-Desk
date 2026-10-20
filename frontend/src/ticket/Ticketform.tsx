@@ -16,6 +16,8 @@ const Ticketform = () => {
         description : ""
     })
 
+    const [image , setImage] = useState<File | null>(null)
+ 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name , value } = e.target
 
@@ -26,7 +28,23 @@ const Ticketform = () => {
 
     const handleSubmit = (e:React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log(data);
+
+        try {
+            const formData = new FormData()
+
+            formData.append('title' , data.title)
+            formData.append('category' , data.category)
+            formData.append('priority' , data.priority)
+            formData.append('description' , data.description)
+
+            if(image){
+                formData.append('image' , image)
+            }
+            
+        } catch (error) {
+             console.error("Ticket submission failed:", error);
+        }
+
     }
 
     const dispatch = useDispatch<AppDispatch>()
@@ -58,7 +76,7 @@ const Ticketform = () => {
                     </div>
                     <h1 className="text-2xl ml-2 font-medium">Problem Details</h1>
                 </div>
-                <form action="" className="flex flex-col gap-6" onSubmit={handleSubmit}>
+                <form action="" className="flex flex-col gap-6" onSubmit={handleSubmit} encType="multipart/form-data">
                     <div className="flex flex-col justify-center items-start gap-2">
                         <label htmlFor="ticket-subject" className="text-sm font-medium text-gray-700">Ticket Subject</label>
                         <input
@@ -90,6 +108,7 @@ const Ticketform = () => {
                                 type="file"
                                 className={classInput}
                                 name="image"
+                                onChange={(e) => setImage(e.target.files?.[0] ?? null)}
                             />
                         </div>
                     </div>

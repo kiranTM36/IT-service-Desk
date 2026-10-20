@@ -1,7 +1,6 @@
+import { Outlet } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Sidenav from './components/Sidenav'
-import Ticketform from './ticket/Ticketform'
-import Add from './ticket/Ticketform'
 
 const Home = () => {
   return (
@@ -12,7 +11,7 @@ const Home = () => {
             <Sidenav />
 
             <div className='px-8 py-4 bg-[#FAF8FF] h-full overflow-x-hidden overflow-y-auto'>
-                <Ticketform />
+                <Outlet />
             </div>
         </div>
     </div>
