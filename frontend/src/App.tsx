@@ -1,6 +1,10 @@
 import { BrowserRouter , Routes , Route } from 'react-router-dom'
 import Home from './Home'
 import Ticket from './pages/Ticket'
+import Auth from './auth/Auth'
+import Login from './auth/Login'
+import Signup from './auth/Signup'
+import User from './pages/User'
 
 
 const App = () => {
@@ -11,7 +15,11 @@ const App = () => {
 
         <Route path='/' element={<Home />} >
           <Route path='/ticket' element={<Ticket />} />
+          <Route path='/user' element={<User />} />
         </Route>
+
+        <Route path='/signup' element={<Signup />} />
+        <Route path='/login' element={<Login />} />
 
       </Routes>
 
