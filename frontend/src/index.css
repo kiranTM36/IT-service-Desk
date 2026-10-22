@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
-.active{
-    background-color: blue;
+.default{
+    color: rgb(41, 41, 41);
+    width: 90%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 500;
 }
 
 .inActive{
-    background-color: red;
+    background-color: #4F46E5;
+    color: white;
 }

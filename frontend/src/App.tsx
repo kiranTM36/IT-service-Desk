@@ -5,6 +5,7 @@ import Auth from './auth/Auth'
 import Login from './auth/Login'
 import Signup from './auth/Signup'
 import User from './pages/User'
+import Create from './ticket/Create'
 
 
 const App = () => {
@@ -15,6 +16,7 @@ const App = () => {
 
         <Route path='/' element={<Home />} >
           <Route path='/ticket' element={<Ticket />} />
+          <Route path='/create' element={<Create />} />
           <Route path='/user' element={<User />} />
         </Route>
 

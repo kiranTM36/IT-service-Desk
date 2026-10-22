@@ -4,7 +4,16 @@ import React, { useEffect, useState } from "react"
 import { getAllCategory } from "../store/categorySlice"
 import { FileText, Send } from "lucide-react"
 
-const Ticketform = () => {
+interface ticketData{
+
+}
+
+interface ticketProps{
+    name : string
+}
+
+
+const Ticketform:React.FC<ticketProps> = ({name}) => {
 
     const classInput = "bg-gray-50 border border-gray-200 text-sm w-full px-4 py-3 rounded-md outline-none transition-all duration-200 focus:ring-1 focus:bg-white focus:border-blue-500 focus:ring-blue-100"
     const optionDiv = "w-1/3 border border-gray-200 shadow rounded-lg px-3 py-2 cursor-pointer transition-all mb-[3vh]"
@@ -65,7 +74,7 @@ const Ticketform = () => {
                     <span className="h-2 w-2 rounded-full bg-blue-500" />
                     IT SERVICE DESK
                 </span>
-                <h1 className="font-medium text-4xl">Create a support ticket</h1>
+                <h1 className="font-medium text-4xl">{name} a support ticket</h1>
                 <span className="text-[14px] font-normal">Tell us what's happening out IT team wiil investigate and resolve it promptly</span>
             </div>
 

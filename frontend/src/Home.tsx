@@ -7,7 +7,7 @@ const Home = () => {
     <div>
         <Navbar />
 
-        <div className='mt-[7vh] h-[93vh] grid grid-cols-[20%_80%]'>
+        <div className='mt-[7vh] h-[93vh] grid grid-cols-[15%_85%]'>
             <Sidenav />
 
             <div className='px-8 py-4 bg-[#FAF8FF] h-full overflow-x-hidden overflow-y-auto'>

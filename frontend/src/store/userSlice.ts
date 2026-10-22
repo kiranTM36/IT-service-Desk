@@ -10,23 +10,23 @@ export interface userData {
 }
 
 interface userInfo {
-    id : number
-    username: string
-    email: string
-    password: string
+    id: number;
+    email: string;
+    role: string;
+    profile: string | null;
 }
 
 interface userState {
     users : userInfo[],
     user : userInfo | null,
-    token : string
+    token : string | null
     status : string
 }
 
 const initialState : userState = {
     users : [],
     user : null,
-    token : '',
+    token : null,
     status: ''
 }
 
@@ -37,7 +37,8 @@ const userSlice = createSlice({
         setUsers (state , action : PayloadAction <userInfo[]>){
             state.users = action.payload
         },
-        setUser (state , action : PayloadAction <userInfo>){
+        setUser (state , action : PayloadAction <userInfo | null>){
+            console.log("setUser payload:", action.payload);
             state.user = action.payload
         },
         setToken (state , action : PayloadAction <string>){
@@ -52,25 +53,30 @@ const userSlice = createSlice({
 export const { setUser , setUsers , setToken , setStatus } = userSlice.actions
 export default userSlice.reducer
 
-export function LoginAction(data : userData){
-    return async function LoginThunk(dispatch:AppDispatch) {
-        dispatch(setStatus(status.LOADING))
-        try {
-            const response = await axios.post('http://localhost:5555/user/login' ,data , {
-                withCredentials : true
-            })
+export function LoginAction(data: userData) {
+    return async function LoginThunk(dispatch: AppDispatch) {
+        dispatch(setStatus(status.LOADING));
 
-            if(response.status >= 200 && response.status <300 ){
-                dispatch(setUser(response.data.data))
-                dispatch(setToken(response.data.token))
-                dispatch(setStatus(status.SUCCESS))
-            }
-            
+        try {
+            const response = await axios.post(
+                'http://localhost:5555/user/login',
+                data,
+                { withCredentials: true }
+            );
+
+            console.log("Response:", response.data);
+            console.log("User:", response.data.data);
+            console.log("Backend user:", response.data.data);
+
+            dispatch(setUser(response.data.data));
+            dispatch(setToken(response.data.token));
+            dispatch(setStatus(status.SUCCESS));
+
         } catch (error) {
-            console.log(error);
-            dispatch(setStatus(status.ERRROR))
+            console.error("Login failed:", error);
+            dispatch(setStatus(status.ERRROR));
         }
-    }
+    };
 }
 
 export function signupAction(data : userData){
@@ -103,10 +109,27 @@ export function getAllUser(){
                 dispatch(setUsers(response.data.data))
                 dispatch(setStatus(status.SUCCESS))
             }
-            dispatch(setStatus(status.ERRROR))
         } catch (error) {
             console.log(error);
             dispatch(setStatus(status.ERRROR))
+        }
+    }
+}
+
+export function logOutAction(){
+    return async function logoutThunk(dispatch:AppDispatch) {
+        console.log("clicked");
+        
+        try {
+            const response = await axios.post('http://localhost:5555/user/logout', {}, {
+                withCredentials : true
+            })
+
+            if(response.status === 200){
+                dispatch(setUser(null))
+            }
+        } catch (error) {
+            
         }
     }
 }

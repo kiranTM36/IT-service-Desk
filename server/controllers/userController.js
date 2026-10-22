@@ -112,7 +112,8 @@ const login = (req, res) => {
                 data: {
                     id: result[0].id,
                     email: result[0].email,
-                    role: result[0].role
+                    role: result[0].role,
+                    profile : result[0].profile
                 }
             })
 
@@ -244,6 +245,26 @@ const deleteUser = ( req , res) => {
     }
 }
 
+const logOut = (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'lax'
+        });
+
+        return res.status(200).json({
+            message: "Logout successful",
+            success: true
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Logout failed",
+            success: false
+        });
+    }
+};
+
 module.exports = {
-    signUp , login , getAllUser , getSingleUser , deleteUser
+    signUp , login , getAllUser , getSingleUser , deleteUser , logOut
 }
