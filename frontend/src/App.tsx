@@ -6,6 +6,9 @@ import Login from './auth/Login'
 import Signup from './auth/Signup'
 import User from './pages/User'
 import Create from './ticket/Create'
+import AllTicket from './ticket/AllTicket'
+import MyTicket from './ticket/MyTicket'
+import SingleTicket from './pages/SingleTicket'
 
 
 const App = () => {
@@ -15,9 +18,11 @@ const App = () => {
       <Routes>
 
         <Route path='/' element={<Home />} >
-          <Route path='/ticket' element={<Ticket />} />
+          <Route path='/tickets' element={<AllTicket />} />
+          <Route path='/my-ticket' element={<MyTicket />} />
           <Route path='/create' element={<Create />} />
           <Route path='/user' element={<User />} />
+          <Route path='/ticket/:id' element={<SingleTicket />} />
         </Route>
 
         <Route path='/signup' element={<Signup />} />

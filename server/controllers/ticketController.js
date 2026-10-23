@@ -33,43 +33,36 @@ const createTicket = (req , res) => {
         })
     }
 }
+const getAllTicket = (req, res) => {
+    const sql = `
+    SELECT 
+        t.id AS tId,
+        t.*,
+        u.*,
+        c.*,
+        r.*
+    FROM ticket t
+    JOIN user u ON t.userId = u.id
+    JOIN category c ON t.cId = c.id
+    JOIN role r ON u.roleId = r.id
+`;
 
-const getAllTicket = (req , res) => {
-    try {
-        const sql = `
-        SELECT t.*, u.*,c.*,r.* FROM ticket t JOIN user u ON t.userId = u.id JOIN category c ON t.cId = c.id JOIN role r ON u.roleId = r.id
-        `
+    db.query(sql, (err, result) => {
+        if (err) {
+            console.log("Get All Ticket Error:", err);
+            return res.status(500).json({
+                message: "Database Error",
+                success: false
+            });
+        }
 
-        db.query(sql , (err , result) => {
-            if(err){
-                console.log("Create Ticket Error : ", err);
-                return res.status(500).json({
-                    message : "Error",
-                    success : false
-                })
-            }
-
-            if(result.length === 0){
-                return res.status(404).json({
-                    message : "No Ticket Found",
-                    success : false
-                })
-            }
-
-            return res.status(200).json({
-                message : "List of Ticket",
-                success : true,
-                data  : result
-            })
-        })
-    } catch (error) {
-        console.log("GET All Ticket Error : ", err);
-        return res.status(500).json({
-            message : "Error",
-            success : false
-        })
-    }
-}
+        return res.status(200).json({
+            message: "List of Tickets",
+            success: true,
+            data: result
+        });
+    });
+};
 
 const getSingleTicket = (req , res) => {
     try {
@@ -140,7 +133,7 @@ const deleteTicket = (req , res )  => {
             })
         })
     } catch (error) {
-        console.log("Delete Ticket Error : ", err);
+        console.log("Delete Ticket Error : ", error);
         return res.status(500).json({
             message : "Error",
             success : false
@@ -148,14 +141,50 @@ const deleteTicket = (req , res )  => {
     }
 }
 
-// const updateTicket = (req , res) => {
-//     try {
-//         const
-//     } catch (error) {
-        
-//     }
-// }
+const getMyTicket = (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const sql = `
+            SELECT t.*,t.id as tId, u.*, c.*, r.*
+            FROM ticket t
+            JOIN user u ON t.userId = u.id
+            JOIN category c ON t.cId = c.id
+            JOIN role r ON u.roleId = r.id
+            WHERE t.userId = ?
+        `;
+
+        db.query(sql, [userId], (err, result) => {
+            if (err) {
+                console.log("Ticket Error:", err);
+                return res.status(500).json({
+                    message: "Error fetching tickets",
+                    success: false
+                });
+            }
+
+            if (result.length === 0) {
+                return res.status(404).json({
+                    message: "No Tickets Found",
+                    success: false
+                });
+            }
+
+            return res.status(200).json({
+                message: "My Tickets",
+                success: true,
+                data: result
+            });
+        });
+    } catch (error) {
+        console.log("Get My Ticket Error:", error);
+        return res.status(500).json({
+            message: "Error",
+            success: false
+        });
+    }
+};
 
 module.exports = {
-    createTicket , getAllTicket , getSingleTicket , deleteTicket
+    createTicket , getAllTicket , getSingleTicket , deleteTicket , getMyTicket
 }

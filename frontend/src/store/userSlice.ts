@@ -25,8 +25,8 @@ interface userState {
 
 const initialState : userState = {
     users : [],
-    user : null,
-    token : null,
+    user: JSON.parse(localStorage.getItem('user') || 'null'),
+    token: localStorage.getItem('token'),
     status: ''
 }
 
@@ -59,18 +59,19 @@ export function LoginAction(data: userData) {
 
         try {
             const response = await axios.post(
-                'http://localhost:5555/user/login',
+                'http://localhost:9999/user/login',
                 data,
                 { withCredentials: true }
             );
 
-            console.log("Response:", response.data);
-            console.log("User:", response.data.data);
-            console.log("Backend user:", response.data.data);
-
             dispatch(setUser(response.data.data));
             dispatch(setToken(response.data.token));
             dispatch(setStatus(status.SUCCESS));
+
+            localStorage.setItem('token'  , response.data.token)
+            localStorage.setItem('user', JSON.stringify(response.data.data));
+
+            return true
 
         } catch (error) {
             console.error("Login failed:", error);
@@ -83,10 +84,12 @@ export function signupAction(data : userData){
     return async function signUpThunk(dispatch:AppDispatch) {
         dispatch(setStatus(status.LOADING))
         try {
-            const response = await axios.post('http://localhost/5555/signup' ,data)
+            const response = await axios.post('http://localhost/9999/signup' ,data)
 
             if(response.status >= 200 && response.status <300 ){
                 dispatch(setStatus(status.SUCCESS))
+
+                return true
             }
             
         } catch (error) {
@@ -101,7 +104,7 @@ export function getAllUser(){
         dispatch(setStatus(status.LOADING))
 
         try {
-            const response = await axios.get('http://localhost:5555/user' , {
+            const response = await axios.get('http://localhost:9999/user' , {
                 withCredentials : true
             })
 
@@ -118,15 +121,14 @@ export function getAllUser(){
 
 export function logOutAction(){
     return async function logoutThunk(dispatch:AppDispatch) {
-        console.log("clicked");
-        
+        dispatch(setStatus(status.SUCCESS))
         try {
-            const response = await axios.post('http://localhost:5555/user/logout', {}, {
+            const response = await axios.post('http://localhost:9999/user/logout', {}, {
                 withCredentials : true
             })
 
             if(response.status === 200){
-                dispatch(setUser(null))
+                localStorage.clear()
             }
         } catch (error) {
             

@@ -1,10 +1,14 @@
-const { createTicket, getAllTicket, getSingleTicket, deleteTicket } = require('../controllers/ticketController')
+const { createTicket, getAllTicket, getSingleTicket, deleteTicket, getMyTicket } = require('../controllers/ticketController')
+const authorize = require('../middleware/authorization')
+const authenticate = require('../middleware/authenticate')
 const uploads = require('../middleware/multer')
 const route = require('express').Router()
 
 route.post('/add' ,uploads.single('image'), createTicket)
 
 route.get('/' , getAllTicket)
+
+route.get('/my-tickets' , authorize, getMyTicket)
 
 route.get('/:id' , getSingleTicket)
 

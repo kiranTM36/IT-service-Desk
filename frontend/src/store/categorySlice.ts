@@ -39,7 +39,7 @@ export function getAllCategory(){
         dispatch(setStatus(status.LOADING))
 
         try {
-            const response = await axios.get('http://localhost:5555/category')
+            const response = await axios.get('http://localhost:9999/category')
 
             if(response.status === 200){
                 dispatch(setCategory(response.data.data))

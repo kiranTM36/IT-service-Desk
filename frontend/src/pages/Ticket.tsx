@@ -1,27 +1,29 @@
 import { useDispatch, useSelector } from "react-redux"
 import { type AppDispatch, type RootState } from "../store/store"
-import { useEffect, useState } from "react"
-import { getAllTicket } from "../store/ticketSlice"
+import React, { useEffect, useState } from "react"
+import { getAllTicket, getMyTicket, type ticket } from "../store/ticketSlice"
 import { getAllCategory } from "../store/categorySlice"
+import { Link } from "react-router-dom"
 
-const Ticket = () => {
+interface props{
+    name : string,
+    tickets: ticket[];
+}
+
+const Ticket:React.FC<props> = ({name , tickets}) => {
     const tableRowStyle = "px-6 py-4 font-semibold text-center"
+    const divClass = "bg-white h-full w-1/4 shadow rounded-md"
 
     const [search, setSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("")
 
     const dispatch = useDispatch<AppDispatch>()
 
-    const { tickets } = useSelector(
-        (state: RootState) => state.ticket
-    )
-
     const { category } = useSelector(
         (state: RootState) => state.categroy
     )
 
     useEffect(() => {
-        dispatch(getAllTicket())
         dispatch(getAllCategory())
     }, [dispatch])
 
@@ -38,7 +40,17 @@ const Ticket = () => {
     })
 
     return (
-        <div className="flex flex-col items-center justify-center gap-10">
+        <div className="flex flex-col items-center justify-center gap-3">
+            <div className="text-left w-full">
+                <h1 className="font-bold text-3xl">{name}</h1>
+                <span className="text-gray-700 text-[16px]">Manage , Track and Follow up on all request Submits</span>
+            </div>
+            <div className="h-[14vh] w-full flex justify-evenly items-center gap-4">
+                <div className={divClass}></div>
+                <div className={divClass}></div>
+                <div className={divClass}></div>
+                <div className={divClass}></div>
+            </div>
             <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
                 <div className="flex h-[10vh] w-full items-center justify-start gap-4 bg-white px-4">
 
@@ -85,7 +97,7 @@ const Ticket = () => {
 
                     <tbody className="divide-y divide-gray-100">
                         {filteredTickets.length === 0 ? (
-                            <tr>
+                            <tr key={"no-tickets"}>
                                 <td
                                     colSpan={6}
                                     className="px-6 py-10 text-center text-gray-500"
@@ -96,7 +108,7 @@ const Ticket = () => {
                         ) : (
                             filteredTickets.map((ticket, index) => (
                                 <tr
-                                    key={ticket.id}
+                                    key={index}
                                     className="text-center transition-colors hover:bg-blue-50/40"
                                 >
                                     <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-500">
@@ -104,9 +116,9 @@ const Ticket = () => {
                                     </td>
 
                                     <td className="px-6 py-4">
-                                        <p className="font-medium text-gray-900">
+                                        <Link to={`/ticket/${ticket.tId}`}><p className="font-medium text-gray-900">
                                             {ticket.title}
-                                        </p>
+                                        </p></Link>
                                     </td>
 
                                     <td className="whitespace-nowrap px-6 py-4 text-gray-600">
