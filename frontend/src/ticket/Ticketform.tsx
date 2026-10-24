@@ -6,54 +6,55 @@ import { FileText, Send } from "lucide-react"
 import { getSingleTicket } from "../store/ticketSlice"
 import { useParams } from "react-router-dom"
 
-interface ticketProps{
-    name : string
-    onEvent : (data :FormData)=> void
+interface ticketProps {
+    name: string
+    onEvent: (data: FormData) => void
 }
 
-const Ticketform:React.FC<ticketProps> = ({name , onEvent}) => {
+const Ticketform: React.FC<ticketProps> = ({ name, onEvent }) => {
 
-    const {id} = useParams()
+    const { id } = useParams()
 
     const classInput = "bg-gray-50 border border-gray-200 text-sm w-full px-4 py-3 rounded-md outline-none transition-all duration-200 focus:ring-1 focus:bg-white focus:border-blue-500 focus:ring-blue-100"
     const optionDiv = "w-1/3 border border-gray-200 shadow rounded-lg px-3 py-2 cursor-pointer transition-all mb-[3vh]"
 
     const [data, setData] = useState({
-    title: "",
-    cId: "",
-    priority: "medium",
-    description: ""
-});
+        title: "",
+        cId: "",
+        priority: "medium",
+        description: ""
+    });
 
-const [image, setImage] = useState<File | null>(null);
- 
-    const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const {name , value } = e.target
+    const [image, setImage] = useState<File | null>(null);
 
-        setData((data)=>({...data , 
-            [name] : value
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target
+
+        setData((data) => ({
+            ...data,
+            [name]: value
         }))
     }
 
-    const handleSubmit = (e:React.SubmitEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
         try {
             const formData = new FormData()
 
-            formData.append('title' , data.title)
-            formData.append('cId' , data.cId)
-            formData.append('priority' , data.priority)
-            formData.append('description' , data.description)
+            formData.append('title', data.title)
+            formData.append('cId', data.cId)
+            formData.append('priority', data.priority)
+            formData.append('description', data.description)
 
-            if(image){
-                formData.append('image' , image)
+            if (image) {
+                formData.append('image', image)
             }
 
             onEvent(formData)
-            
+
         } catch (error) {
-             console.error("Ticket submission failed:", error);
+            console.error("Ticket submission failed:", error);
         }
 
     }
@@ -65,28 +66,28 @@ const [image, setImage] = useState<File | null>(null);
     useEffect(() => {
         dispatch(getAllCategory())
         if (id) {
-        dispatch(getSingleTicket(Number(id)));
-    } else {
-        setData({
-            title: "",
-            cId: "",
-            priority: "medium",
-            description: ""
-        });
-        setImage(null);
-    }
-    }, [dispatch , id])
+            dispatch(getSingleTicket(Number(id)));
+        } else {
+            setData({
+                title: "",
+                cId: "",
+                priority: "medium",
+                description: ""
+            });
+            setImage(null);
+        }
+    }, [dispatch, id])
 
     useEffect(() => {
-    if (id && ticket) {
-        setData({
-            title: ticket.title ?? "",
-            cId: String(ticket.cId ?? ""),
-            priority: ticket.priority ?? "medium",
-            description: ticket.description ?? ""
-        });
-    }
-}, [id, ticket]);
+        if (id && ticket) {
+            setData({
+                title: ticket.title ?? "",
+                cId: String(ticket.cId ?? ""),
+                priority: ticket.priority ?? "medium",
+                description: ticket.description ?? ""
+            });
+        }
+    }, [id, ticket]);
 
 
     return (
@@ -125,13 +126,19 @@ const [image, setImage] = useState<File | null>(null);
                     <div className="flex justify-between items-center gap-3">
                         <div className="flex flex-col justify-center items-start gap-2 w-1/2">
                             <label htmlFor="ticket-subject" className="text-sm font-medium text-gray-700">Category</label>
-                            <select name="category" value={data.cId}  id="" className={classInput} onChange={handleChange} >
-                                <option value="">Select an Option</option>
-                                {
-                                    category.map((category) => (
-                                        <option key={category.id} value={category.id}>{category.cName}</option>
-                                    ))
-                                }
+                            <select
+                                name="cId"
+                                value={data.cId}
+                                className={classInput}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select a Category</option>
+
+                                {category.map((category) => (
+                                    <option key={category.id} value={String(category.id)}>
+                                        {category.cName}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 

@@ -6,6 +6,8 @@ const session = require("express-session");
 const { OAuth2Client } = require("google-auth-library");
 const cookieParser = require('cookie-parser')
 const db = require("./db");
+const path = require("path");
+
 
 const app = express();
 
@@ -37,6 +39,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser())
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 app.use('/role', roleRoute )
 app.use('/user', userRoute )

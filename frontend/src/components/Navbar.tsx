@@ -53,7 +53,7 @@ const Navbar = () => {
                 <div className="absolute z-10 top-15 right-5 rounded-lg">
                   {
                     user?.id ? (
-                      <div className="p-2 border border-gray-200 shadow">
+                      <div className="p-2 border border-gray-200 shadow bg-white">
                         <button className={showDiv}>Profile</button>
                         <Link to='/'>
                           <button className={showDiv} onClick={handleLogout}>Log out</button>

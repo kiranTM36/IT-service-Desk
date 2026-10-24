@@ -4,6 +4,7 @@ import { status } from './status'
 import axios from 'axios'
 
 export interface ticket{
+    name : string
     tId : number
     title : string
     tStatus : boolean
@@ -13,6 +14,9 @@ export interface ticket{
     username : string
     cName : string
     cId : number
+    createdAt : Date
+    profile : string
+    image : string
 }
 
 interface ticketState {

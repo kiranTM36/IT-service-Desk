@@ -71,7 +71,7 @@ const getSingleTicket = (req , res) => {
     try {
         const {id} = req.params
         const sql = `
-        SELECT t.*,t.status as tStatus, u.*,c.*,r.* FROM ticket t JOIN user u ON t.userId = u.id JOIN category c ON t.cId = c.id JOIN role r ON u.roleId = r.id WHERE t.id=?
+        SELECT t.*,t.id as tId, t.status as tStatus, u.*,c.*,r.* FROM ticket t JOIN user u ON t.userId = u.id JOIN category c ON t.cId = c.id JOIN role r ON u.roleId = r.id WHERE t.id=?
         `
 
         db.query(sql ,[id], (err , result) => {
