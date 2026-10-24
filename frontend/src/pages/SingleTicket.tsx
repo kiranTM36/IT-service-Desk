@@ -8,7 +8,7 @@ const SingleTicket = () => {
     const {id} = useParams()
     const dispatch = useDispatch<AppDispatch>()
 
-    const {ticket , status} = useSelector((state:RootState) => state.ticket)
+    const {ticket } = useSelector((state:RootState) => state.ticket)
 
     useEffect(() => {
         if(id){
@@ -16,11 +16,13 @@ const SingleTicket = () => {
         }
     }, [dispatch , id])
 
+    console.log(ticket?.priority);
     
   return (
     <div>
       <div>
-        <div>{ticket?.status === false ? "In Progress" : "Completed"}</div>
+        <div>{ticket?.tStatus ? "Completed" : "In Progress"}</div>
+        <div>{ticket?.priority}</div>
       </div>
     </div>
   )

@@ -38,6 +38,7 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
 
         return matchesSearch && matchesCategory
     })
+    
 
     return (
         <div className="flex flex-col items-center justify-center gap-3">
@@ -92,6 +93,7 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                             <th className={tableRowStyle}>Category</th>
                             <th className={tableRowStyle}>Priority</th>
                             <th className={tableRowStyle}>Status</th>
+                            <th className={tableRowStyle}>Actions</th>
                         </tr>
                     </thead>
 
@@ -148,16 +150,27 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                                     <td className="whitespace-nowrap px-6 py-4">
                                         <span
                                             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-                                                ticket.status === true
+                                                ticket.tStatus === true
                                                     ? "bg-green-50 text-green-700"
                                                     : "bg-amber-50 text-amber-700"
                                             }`}
                                         >
                                             <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                                            {ticket.status === true
+                                            {ticket.tStatus === true
                                                 ? "Complete"
                                                 : "Pending"}
                                         </span>
+                                    </td>
+
+                                    <td>
+                                        {
+                                            name === "My Ticket" && (
+                                                <Link to={`/edit/${ticket.tId}`}>
+                                                    <button className="bg-gray-50 border-2 text-gray-700 cursor-pointer border-gray-200 rounded-md px-2 text-[12px] mr-2 hover:scale-105 active:bg-gray-100">Edit</button>
+                                                </Link>
+                                            )
+                                        }
+                                        <button className="bg-red-50 border-2 cursor-pointer hover:scale-105 active:bg-red-100 border-red-200 text-red-700 rounded-md px-2 text-[12px] text-center">Delete</button>
                                     </td>
                                 </tr>
                             ))

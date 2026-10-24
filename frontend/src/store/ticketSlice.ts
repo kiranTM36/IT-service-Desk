@@ -6,7 +6,7 @@ import axios from 'axios'
 export interface ticket{
     tId : number
     title : string
-    status : boolean
+    tStatus : boolean
     priority : string
     category : string
     description : string
@@ -104,4 +104,36 @@ export function getSingleTicket(id : number){
             dispatch(setStatus(status.ERRROR))
         }
     }
+}
+
+export function createTicket(data: FormData) {
+    return async function createTicketThunk(dispatch: AppDispatch) {
+        dispatch(setStatus(status.LOADING));
+
+        try {
+            const response = await axios.post(
+                "http://localhost:9999/ticket/add",
+                data,
+                {
+                    withCredentials: true
+                }
+            );
+
+            if (response.status >= 200 && response.status < 300) {
+                dispatch(setStatus(status.SUCCESS));
+                console.log("Data saved");
+
+                return true;
+            }
+
+            dispatch(setStatus(status.ERRROR));
+            return false;
+
+        } catch (error) {
+            dispatch(setStatus(status.ERRROR));
+            console.error("Ticket creation failed:", error);
+
+            return false;
+        }
+    };
 }

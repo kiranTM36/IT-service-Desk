@@ -4,7 +4,7 @@ const authenticate = require('../middleware/authenticate')
 const uploads = require('../middleware/multer')
 const route = require('express').Router()
 
-route.post('/add' ,uploads.single('image'), createTicket)
+route.post('/add' ,authorize,uploads.single('image'), createTicket)
 
 route.get('/' , getAllTicket)
 

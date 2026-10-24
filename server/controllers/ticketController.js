@@ -2,7 +2,9 @@ const db = require("../db")
 
 const createTicket = (req , res) => {
     try {
-        const { title , cId ,userId , description , priority } = req.body
+        const { title , cId  , description , priority } = req.body
+
+        const userId = req.user.id
 
         const image = req.file ? req.file.filename : null
 
@@ -26,7 +28,7 @@ const createTicket = (req , res) => {
             })
         })
     } catch (error) {
-        console.log("Create Ticket Error : ", err);
+        console.log("Create Ticket Error : ", error);
         return res.status(500).json({
             message : "Error",
             success : false
@@ -35,16 +37,17 @@ const createTicket = (req , res) => {
 }
 const getAllTicket = (req, res) => {
     const sql = `
-    SELECT 
+    SELECT
         t.id AS tId,
         t.*,
+        t.status as tStatus,
         u.*,
         c.*,
         r.*
     FROM ticket t
-    JOIN user u ON t.userId = u.id
-    JOIN category c ON t.cId = c.id
-    JOIN role r ON u.roleId = r.id
+    LEFT JOIN user u ON t.userId = u.id
+    LEFT JOIN category c ON t.cId = c.id
+    LEFT JOIN role r ON u.roleId = r.id
 `;
 
     db.query(sql, (err, result) => {
@@ -68,7 +71,7 @@ const getSingleTicket = (req , res) => {
     try {
         const {id} = req.params
         const sql = `
-        SELECT t.*, u.*,c.*,r.* FROM ticket t JOIN user u ON t.userId = u.id JOIN category c ON t.cId = c.id JOIN role r ON u.roleId = r.id WHERE t.id=?
+        SELECT t.*,t.status as tStatus, u.*,c.*,r.* FROM ticket t JOIN user u ON t.userId = u.id JOIN category c ON t.cId = c.id JOIN role r ON u.roleId = r.id WHERE t.id=?
         `
 
         db.query(sql ,[id], (err , result) => {
@@ -90,7 +93,7 @@ const getSingleTicket = (req , res) => {
             return res.status(200).json({
                 message : "Ticket Found",
                 success : true,
-                data  : result
+                data  : result[0]
             })
         })
     } catch (error) {

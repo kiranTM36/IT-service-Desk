@@ -3,29 +3,29 @@ import { type AppDispatch, type RootState } from "../store/store"
 import React, { useEffect, useState } from "react"
 import { getAllCategory } from "../store/categorySlice"
 import { FileText, Send } from "lucide-react"
-
-interface ticketData{
-
-}
+import { getSingleTicket } from "../store/ticketSlice"
+import { useParams } from "react-router-dom"
 
 interface ticketProps{
     name : string
+    onEvent : (data :FormData)=> void
 }
 
+const Ticketform:React.FC<ticketProps> = ({name , onEvent}) => {
 
-const Ticketform:React.FC<ticketProps> = ({name}) => {
+    const {id} = useParams()
 
     const classInput = "bg-gray-50 border border-gray-200 text-sm w-full px-4 py-3 rounded-md outline-none transition-all duration-200 focus:ring-1 focus:bg-white focus:border-blue-500 focus:ring-blue-100"
     const optionDiv = "w-1/3 border border-gray-200 shadow rounded-lg px-3 py-2 cursor-pointer transition-all mb-[3vh]"
 
-    const [data , setData] = useState({
-        title : '',
-        category : "",
-        priority : "medium",
-        description : ""
-    })
+    const [data, setData] = useState({
+    title: "",
+    cId: "",
+    priority: "medium",
+    description: ""
+});
 
-    const [image , setImage] = useState<File | null>(null)
+const [image, setImage] = useState<File | null>(null);
  
     const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const {name , value } = e.target
@@ -42,13 +42,15 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
             const formData = new FormData()
 
             formData.append('title' , data.title)
-            formData.append('category' , data.category)
+            formData.append('cId' , data.cId)
             formData.append('priority' , data.priority)
             formData.append('description' , data.description)
 
             if(image){
                 formData.append('image' , image)
             }
+
+            onEvent(formData)
             
         } catch (error) {
              console.error("Ticket submission failed:", error);
@@ -57,13 +59,34 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
     }
 
     const dispatch = useDispatch<AppDispatch>()
-    const { category, status } = useSelector((state: RootState) => state.categroy)
+    const { category } = useSelector((state: RootState) => state.categroy)
+    const { ticket } = useSelector((state: RootState) => state.ticket)
 
     useEffect(() => {
         dispatch(getAllCategory())
-    }, [dispatch])
+        if (id) {
+        dispatch(getSingleTicket(Number(id)));
+    } else {
+        setData({
+            title: "",
+            cId: "",
+            priority: "medium",
+            description: ""
+        });
+        setImage(null);
+    }
+    }, [dispatch , id])
 
-    console.log(status, category);
+    useEffect(() => {
+    if (id && ticket) {
+        setData({
+            title: ticket.title ?? "",
+            cId: String(ticket.cId ?? ""),
+            priority: ticket.priority ?? "medium",
+            description: ticket.description ?? ""
+        });
+    }
+}, [id, ticket]);
 
 
     return (
@@ -94,6 +117,7 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
                             className={classInput}
                             placeholder="Title of Problem"
                             name="title"
+                            value={data.title}
                             onChange={handleChange}
                         />
                     </div>
@@ -101,8 +125,8 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
                     <div className="flex justify-between items-center gap-3">
                         <div className="flex flex-col justify-center items-start gap-2 w-1/2">
                             <label htmlFor="ticket-subject" className="text-sm font-medium text-gray-700">Category</label>
-                            <select name="category" id="" className={classInput} onChange={handleChange} >
-                                <option value=''>Select an Option</option>
+                            <select name="category" value={data.cId}  id="" className={classInput} onChange={handleChange} >
+                                <option value="">Select an Option</option>
                                 {
                                     category.map((category) => (
                                         <option key={category.id} value={category.id}>{category.cName}</option>
@@ -179,7 +203,7 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
                         </div>
                         <div className="mt-[3vh]">
                             <p className="mb-2 text-sm font-medium text-gray-700">Description</p>
-                            <textarea name="description" id="" className={classInput} rows={5} placeholder="Describe your problem in details.." onChange={handleChange}></textarea>
+                            <textarea name="description" id="" className={classInput} value={data.description} rows={5} placeholder="Describe your problem in details.." onChange={handleChange}></textarea>
                         </div>
                     </div>
                     <div className="flex flex-col-reverse gap-3 border-t border-gray-100 bg-gray-50/70 px-6 py-5 sm:flex-row sm:items-center sm:justify-between md:px-8">
@@ -191,7 +215,7 @@ const Ticketform:React.FC<ticketProps> = ({name}) => {
                             type="submit"
                             className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98]"
                         >
-                            Submit ticket
+                            {name === "Edit" ? "Edit Ticket" : "Submit Ticket"}
                             <Send size={16} />
                         </button>
                     </div>
