@@ -8,7 +8,7 @@ route.post('/add' ,authorize,uploads.single('image'), createTicket)
 
 route.get('/' , getAllTicket)
 
-route.get('/my-tickets' , authorize, getMyTicket)
+route.get('/my-tickets' , authorize , getMyTicket)
 
 route.get('/:id' , getSingleTicket)
 

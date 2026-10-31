@@ -63,7 +63,7 @@ const login = (req, res) => {
         }
 
         const sql = `
-            SELECT * FROM user WHERE email=?
+            SELECT u.*,r.* FROM user u JOIN role r ON u.roleId = r.id WHERE email=?
         `
 
         db.query(sql, [email], (err, result) => {
@@ -109,12 +109,7 @@ const login = (req, res) => {
                 message: "Login Success",
                 success: true,
                 token: token,
-                data: {
-                    id: result[0].id,
-                    email: result[0].email,
-                    role: result[0].role,
-                    profile : result[0].profile
-                }
+                data: result[0]
             })
 
 

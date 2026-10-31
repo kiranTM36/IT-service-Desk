@@ -146,18 +146,18 @@ const deleteTicket = (req , res )  => {
 
 const getMyTicket = (req, res) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user
 
         const sql = `
-            SELECT t.*,t.id as tId, u.*, c.*, r.*
-            FROM ticket t
-            JOIN user u ON t.userId = u.id
-            JOIN category c ON t.cId = c.id
-            JOIN role r ON u.roleId = r.id
-            WHERE t.userId = ?
+        SELECT t.*,t.id as tId, u.*, c.*, r.*
+        FROM ticket t
+        JOIN user u ON t.userId = u.id
+        JOIN category c ON t.cId = c.id
+        JOIN role r ON u.roleId = r.id
+        WHERE t.userId = ?
         `;
 
-        db.query(sql, [userId], (err, result) => {
+        db.query(sql, [userId.id], (err, result) => {
             if (err) {
                 console.log("Ticket Error:", err);
                 return res.status(500).json({

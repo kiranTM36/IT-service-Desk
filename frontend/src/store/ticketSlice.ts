@@ -141,3 +141,30 @@ export function createTicket(data: FormData) {
         }
     };
 }
+
+export function deleteTicket(id : number, name?: string){
+    return async function deleteTicketThunk(dispatch:AppDispatch) {
+        dispatch(setStatus(status.LOADING))
+        
+        try {
+            const response = await axios.delete(`http://localhost:9999/ticket/delete/${id}`)
+
+            if (response.data.success) {
+                if (name === "All Ticket") {
+                    dispatch(getAllTicket());
+                } else {
+                    dispatch(getMyTicket());
+                }
+                return true;
+            }
+
+            dispatch(setStatus(status.ERRROR));
+            return false;
+        } catch (error) {
+            dispatch(setStatus(status.ERRROR));
+            console.error("Ticket Delete failed:", error);
+
+            return false;
+        }
+    }
+}

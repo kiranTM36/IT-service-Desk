@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { type AppDispatch, type RootState } from "../store/store"
 import React, { useEffect, useState } from "react"
-import { getAllTicket, getMyTicket, type ticket } from "../store/ticketSlice"
+import {  deleteTicket, type ticket } from "../store/ticketSlice"
 import { getAllCategory } from "../store/categorySlice"
 import { Link } from "react-router-dom"
 
@@ -38,6 +38,12 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
 
         return matchesSearch && matchesCategory
     })
+
+    const handleDelete = (id : number) => {
+        
+        dispatch(deleteTicket(Number(id)))
+        
+    }
     
 
     return (
@@ -47,8 +53,16 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                 <span className="text-gray-700 text-[16px]">Manage , Track and Follow up on all request Submits</span>
             </div>
             <div className="h-[14vh] w-full flex justify-evenly items-center gap-4">
-                <div className={divClass}></div>
-                <div className={divClass}></div>
+                <div className={`${divClass} flex justify-left items-left flex-col px-4 py-2`}>
+                    <div>Total Ticket</div>
+                    <h1 className="font-semibold text-3xl text-right">{tickets.length}</h1>
+                </div>
+
+                <div className={`${divClass} flex justify-left items-left flex-col px-4 py-2`}>
+                    <div>Total Ticket</div>
+                    <h1 className="font-semibold text-3xl">{tickets.filter((ticket) => ticket.tStatus == false).length}</h1>
+                </div>
+
                 <div className={divClass}></div>
                 <div className={divClass}></div>
             </div>
@@ -170,7 +184,8 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                                                 </Link>
                                             )
                                         }
-                                        <button className="bg-red-50 border-2 cursor-pointer hover:scale-105 active:bg-red-100 border-red-200 text-red-700 rounded-md px-2 text-[12px] text-center">Delete</button>
+                                        
+                                        <button onClick={()=>handleDelete(ticket.tId)} className="bg-red-50 border-2 cursor-pointer hover:scale-105 active:bg-red-100 border-red-200 text-red-700 rounded-md px-2 text-[12px] text-center">Delete</button>
                                     </td>
                                 </tr>
                             ))

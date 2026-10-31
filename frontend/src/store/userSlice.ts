@@ -12,7 +12,7 @@ export interface userData {
 interface userInfo {
     id: number;
     email: string;
-    role: string;
+    name: string;
     profile: string | null;
 }
 
@@ -55,6 +55,7 @@ export default userSlice.reducer
 
 export function LoginAction(data: userData) {
     return async function LoginThunk(dispatch: AppDispatch) {
+
         dispatch(setStatus(status.LOADING));
 
         try {
@@ -64,18 +65,24 @@ export function LoginAction(data: userData) {
                 { withCredentials: true }
             );
 
-            dispatch(setUser(response.data.data));
-            dispatch(setToken(response.data.token));
+            console.log("Backend response:", response.data);
+
+            const user = response.data.data;
+            const token = response.data.token;
+
+            localStorage.setItem('user', JSON.stringify(response.data.data));
+            localStorage.setItem('token', token);
+
+            dispatch(setUser(user));
+            dispatch(setToken(token));
             dispatch(setStatus(status.SUCCESS));
 
-            localStorage.setItem('token'  , response.data.token)
-            localStorage.setItem('user', JSON.stringify(response.data.data));
-
-            return true
+            return true;
 
         } catch (error) {
-            console.error("Login failed:", error);
+            console.error(error);
             dispatch(setStatus(status.ERRROR));
+            return false;
         }
     };
 }

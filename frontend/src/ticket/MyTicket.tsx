@@ -16,7 +16,6 @@ const MyTicket = () => {
         dispatch(getMyTicket())
     }, [dispatch])
 
-    console.log(tickets);
     
     return (
         <Ticket name="My Ticket" tickets={tickets} />

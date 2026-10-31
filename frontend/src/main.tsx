@@ -10,12 +10,15 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <Auth0Provider
-        domain="dev-zdy30girr3fhh833.us.auth0.com"
-        clientId="GgYB7G9VKzIH39vafvAB8D5HfmFRMr9E"
-        authorizationParams={{ redirect_uri: window.location.origin }}
-      >
-        <App />
-      </Auth0Provider>
+  domain="dev-zdy30girr3fhh833.us.auth0.com"
+  clientId="GgYB7G9VKzIH39vafvAB8D5HfmFRMr9E"
+  cacheLocation="localstorage"
+  authorizationParams={{
+    redirect_uri: window.location.origin,
+  }}
+>
+  <App />
+</Auth0Provider>
     </Provider>
   </StrictMode>,
 )
