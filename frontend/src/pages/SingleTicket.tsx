@@ -1,23 +1,44 @@
-import { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useParams } from 'react-router-dom'
 import { type AppDispatch, type RootState } from '../store/store'
 import { getSingleTicket } from '../store/ticketSlice'
-import { Pencil, TimerIcon, Trash} from 'lucide-react'
+import { Pencil, TimerIcon, Trash } from 'lucide-react'
+import { createComment, getComment } from '../store/commentSlice'
 
 const SingleTicket = () => {
   const { id } = useParams()
   const dispatch = useDispatch<AppDispatch>()
 
+  const [commentData , setCommentData] = useState({
+    ticketId : id || '',
+    comment : ''
+  })
+
+  const handleComment = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const {name , value} = e.target
+    setCommentData((prev) => ({
+      ...prev , 
+      [name] : value
+    }))
+  }
+
+  const handleSubmitComment = (e:React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    dispatch(createComment(commentData))
+  }
+
   const { ticket } = useSelector((state: RootState) => state.ticket)
+  const { comment } = useSelector((state: RootState) => state.comment)
 
   useEffect(() => {
     if (id) {
+      dispatch(getComment(Number(id)))
       dispatch(getSingleTicket(Number(id)))
     }
   }, [dispatch, id])
 
-  console.log(ticket?.tId );
+  console.log(comment);
   
 
   return (
@@ -37,30 +58,30 @@ const SingleTicket = () => {
 
         <div className='flex justify-center items-center gap-2'>
           <Link to={`/edit/${ticket?.tId}`}>
-          <button className='flex justify-center items-center bg-[#4F46E5] text-white px-3 py-1 gap-1 rounded-md cursor-pointer hover:scale-105 active:bg-[#3e35e7]'><Pencil size={15}/>Edit</button>
+            <button className='flex justify-center items-center bg-[#4F46E5] text-white px-3 py-1 gap-1 rounded-md cursor-pointer hover:scale-105 active:bg-[#3e35e7]'><Pencil size={15} />Edit</button>
           </Link>
-          <button className='flex justify-center items-center bg-red-500 text-white px-3 py-1 gap-1 rounded-md cursor-pointer hover:scale-105 active:bg-red-700'><Trash size={16}/>Delete</button>
+          <button className='flex justify-center items-center bg-red-500 text-white px-3 py-1 gap-1 rounded-md cursor-pointer hover:scale-105 active:bg-red-700'><Trash size={16} />Delete</button>
         </div>
       </div>
 
       <div className='w-full grid grid-cols-[70%_30%] gap-5 p-1 items-start'>
         <div className='w-full bg-white shadow-md rounded-2xl px-3 py-2'>
 
-        <div className='flex justify-start items-center gap-2 mb-4'>
-          <div className='h-9 w-9 bg-black rounded-full bg-center bg-no-repeat bg-cover' style={{
-            backgroundImage : `url("${ticket?.profile}")`
+          <div className='flex justify-start items-center gap-2 mb-4'>
+            <div className='h-9 w-9 bg-black rounded-full bg-center bg-no-repeat bg-cover' style={{
+              backgroundImage: `url("${ticket?.profile}")`
+            }}></div>
+            <div>{ticket?.username}</div>
+            <div className='text-[13px] bg-blue-100 border-2 border-blue-200 px-2 rounded-lg'>{ticket?.name}</div>
+          </div>
+
+          <div className='mb-4'>
+            {ticket?.description}
+          </div>
+
+          <div className='h-[70vh] w-full bg-black bg-center bg-no-repeat bg-cover rounded-xl' style={{
+            backgroundImage: `url("http://localhost:9999/uploads/${ticket?.image}")`
           }}></div>
-          <div>{ticket?.username}</div>
-          <div className='text-[13px] bg-blue-100 border-2 border-blue-200 px-2 rounded-lg'>{ticket?.name}</div>
-        </div>
-
-        <div className='mb-4'>
-          {ticket?.description}
-        </div>
-
-        <div className='h-[70vh] w-full bg-black bg-center bg-no-repeat bg-cover rounded-xl' style={{
-          backgroundImage: `url("http://localhost:9999/uploads/${ticket?.image}")`
-        }}></div>
 
         </div>
         <div className='w-full h-auto bg-white shadow-md rounded-2xl p-3 gap-4'>
@@ -82,6 +103,23 @@ const SingleTicket = () => {
 
         </div>
       </div>
+
+      <form onSubmit={handleSubmitComment}>
+        {
+          comment?.length === 0 && <h1>NO comment</h1>
+        }
+        {
+          comment?.map((cmt) => (
+            <>
+              <h1>{cmt.comment}</h1>
+            </>
+          ))
+        }
+        <div className='h-15 w-full bg-gray-300'>
+          <input type="text" name='comment' onChange={handleComment} value={commentData.comment}  className='border ' />
+          <button>send</button>
+      </div>
+      </form>
     </div>
   )
 }

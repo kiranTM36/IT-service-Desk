@@ -26,11 +26,9 @@ const App = () => {
         <BrowserRouter>
             <Routes>
 
-                {/* Public Routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
 
-                {/* Protected Routes */}
                 <Route element={<ProtectRoute isAuthenticated={isAuthenticated} role={role} />}>
                     <Route path="/" element={<Home />}>
 

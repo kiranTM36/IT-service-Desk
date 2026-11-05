@@ -18,6 +18,7 @@ const categoryModules = require('./modules/categoryModule')
 const ticketModule = require('./modules/ticketModule')
 const teamModule = require('./modules/teamModules')
 const userTeamModule = require('./modules/userTeamModule')
+const commentModule = require('./modules/commentModules')
 
 roleModules()
 teamModule()
@@ -25,6 +26,7 @@ userModules()
 userTeamModule()
 categoryModules()
 ticketModule()
+commentModule()
 
 //route
 const roleRoute = require('./routes/role.route')
@@ -32,6 +34,7 @@ const userRoute = require('./routes/user.route')
 const categoryRoute = require('./routes/category.route')
 const ticketRoute = require('./routes/ticket.route')
 const teamRoute = require('./routes/team.route')
+const commentRoute = require('./routes/comment.route')
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -46,7 +49,7 @@ app.use('/user', userRoute )
 app.use('/category' , categoryRoute)
 app.use('/ticket' , ticketRoute)
 app.use('/team' , teamRoute)
-
+app.use('/comment' , commentRoute)
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running ");
