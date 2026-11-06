@@ -12,3 +12,22 @@
     background-color: #4F46E5;
     color: white;
 }
+
+.comment{
+    width: fit-content;
+    padding: 5px 10px;
+    margin-left: 0;
+    background: rgb(245, 244, 244);
+    border-radius: 10px;
+    border-bottom-left-radius: 0;
+}
+
+.my-comment{
+    width: fit-content;
+    padding: 5px 10px;
+    margin-left: auto;
+    background: rgb(94, 157, 250);
+    border-radius: 10px;
+    color: white;
+    border-bottom-right-radius: 0;
+}

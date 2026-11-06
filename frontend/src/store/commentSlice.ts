@@ -7,9 +7,18 @@ interface commentData {
     ticketId : string,
     comment : string
 }
+interface cmtInfo {
+  cmtId: number
+  userId: number
+  ticketId: number
+  comment: string
+  profile: string
+  username: string
+  createdAt: string
+}
 
 interface commentState {
-    comment : commentData[] | null,
+    comment : cmtInfo[] | null,
     status : string
 }
 
@@ -22,7 +31,7 @@ const commentSlice = createSlice({
     name : "comment", 
     initialState ,
     reducers : {
-        setComment(state , action : PayloadAction<commentData[] | null>){
+        setComment(state , action : PayloadAction<cmtInfo[] | null>){
             state.comment = action.payload
         },
         setStatus(state , action :PayloadAction<string>){
@@ -59,8 +68,5 @@ export function getComment( id : Number){
         })
 
         dispatch(setComment(response.data.data))
-
-        console.log('comment');
-        
     }
 }

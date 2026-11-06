@@ -10,10 +10,13 @@ export interface userData {
 }
 
 interface userInfo {
-    id: number;
+    uid: number;
     email: string;
     name: string;
     profile: string | null;
+    username: string;
+    roleId: number;
+    role: string;
 }
 
 interface userState {
