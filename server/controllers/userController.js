@@ -5,7 +5,11 @@ require('dotenv').config()
 
 const signUp = (req, res) => {
     try {
-        const {username,email,password} = req.body
+        const {
+            username,
+            email,
+            password
+        } = req.body
 
         if (!username || !email || !password) {
             return res.status(400).json({
@@ -33,10 +37,10 @@ const signUp = (req, res) => {
             res.status(200).json({
                 message: "Signup Success",
                 success: true,
-                data : {
-                    id : result.insertId,
-                    email : email,
-                    password : password
+                data: {
+                    id: result.insertId,
+                    email: email,
+                    password: password
                 }
             })
         })
@@ -124,13 +128,13 @@ const login = (req, res) => {
     }
 }
 
-const getAllUser = (req , res) => {
+const getAllUser = (req, res) => {
     try {
         const sql = `
-        SELECT u.*, r.* FROM user u JOIN role r ON u.roleId = r.id
+        SELECT u.*,u.id as uid, r.* FROM user u JOIN role r ON u.roleId = r.id
         `
 
-        db.query(sql , (err , result) => {
+        db.query(sql, (err, result) => {
             if (err) {
                 console.log("GetAllUser error : ", err);
                 return res.status(500).json({
@@ -138,17 +142,17 @@ const getAllUser = (req , res) => {
                     success: false
                 })
             }
-            if(result.length === 0){
+            if (result.length === 0) {
                 return res.status(404).json({
-                    message : "NO user Found",
-                    success : false
+                    message: "NO user Found",
+                    success: false
                 })
             }
 
             res.status(200).json({
-                message : "List of user",
-                success : true ,
-                data : result
+                message: "List of user",
+                success: true,
+                data: result
             })
 
         })
@@ -162,14 +166,16 @@ const getAllUser = (req , res) => {
     }
 }
 
-const getSingleUser = (req , res) => {
+const getSingleUser = (req, res) => {
     try {
-        const {id} = req.params
+        const {
+            id
+        } = req.params
         const sql = `
         SELECT u.*, r.* FROM user u JOIN role r ON u.roleId = r.id WHERE u.id = ?
         `
 
-        db.query(sql ,[id], (err , result) => {
+        db.query(sql, [id], (err, result) => {
             if (err) {
                 console.log("GetSingleUser error : ", err);
                 return res.status(500).json({
@@ -177,17 +183,17 @@ const getSingleUser = (req , res) => {
                     success: false
                 })
             }
-            if(result.length === 0){
+            if (result.length === 0) {
                 return res.status(404).json({
-                    message : "NO user Found",
-                    success : false
+                    message: "NO user Found",
+                    success: false
                 })
             }
 
             res.status(200).json({
-                message : "List of user",
-                success : true ,
-                data : result[0]
+                message: "List of user",
+                success: true,
+                data: result[0]
             })
 
         })
@@ -201,35 +207,37 @@ const getSingleUser = (req , res) => {
     }
 }
 
-const deleteUser = ( req , res) => {
+const deleteUser = (req, res) => {
     try {
-        const {id} = req.params
-        
+        const {
+            id
+        } = req.params
+
         const sql = `
         UPDATE user SET status = !status WHERE id=?
         `
 
-        db.query(sql , [id] , (err , result) => {
-            if(err){
+        db.query(sql, [id], (err, result) => {
+            if (err) {
                 console.log("DeleteUser error : ", err);
                 return res.status(500).json({
                     message: "error",
                     success: false
                 })
             }
-            if(result.length === 0){
+            if (result.length === 0) {
                 return res.status(404).json({
-                    message : "NO user Found",
-                    success : false
+                    message: "NO user Found",
+                    success: false
                 })
             }
 
             res.status(200).json({
-                message : "Deleted Successfully",
-                success : true ,
-                data : result[0]
+                message: "Deleted Successfully",
+                success: true,
+                data: result[0]
             })
-        } )
+        })
     } catch (error) {
         console.log("GetSingleUser error:", error);
 
@@ -260,6 +268,54 @@ const logOut = (req, res) => {
     }
 };
 
+const updateStatus = (req, res) => {
+    try {
+        const {
+            id
+        } = req.params
+
+        const sql = `
+        UPDATE user SET  status = !status WHERE id = ?
+        `
+
+        db.query(sql, [id], (err, result) => {
+            if (err) {
+                console.log("Update User Status error : ", err);
+                return res.status(500).json({
+                    message: "error",
+                    success: false
+                })
+            }
+
+            if (result.affectedRows === 0) {
+                console.log(err);
+                return res.status(500).json({
+                    message: "error",
+                    success: false
+                })
+            }
+
+            res.status(200).json({
+                message: "Success",
+                success: true
+            })
+        })
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: "error",
+            success: false
+        })
+    }
+}
+
 module.exports = {
-    signUp , login , getAllUser , getSingleUser , deleteUser , logOut
+    signUp,
+    login,
+    getAllUser,
+    getSingleUser,
+    deleteUser,
+    logOut,
+    updateStatus
 }

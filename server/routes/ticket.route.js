@@ -14,4 +14,5 @@ route.get('/:id' , getSingleTicket)
 
 route.delete('/delete/:id' , deleteTicket)
 
+
 module.exports = route

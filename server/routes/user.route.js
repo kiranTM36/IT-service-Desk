@@ -1,4 +1,4 @@
-const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut } = require('../controllers/userController')
+const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus } = require('../controllers/userController')
 
 const route = require('express').Router()
 
@@ -13,5 +13,7 @@ route.get('/:id' , getSingleUser)
 route.post('/delete/:id' , deleteUser)
 
 route.post('/logout' , logOut)
+
+route.post('/status/:id' , updateStatus)
 
 module.exports = route

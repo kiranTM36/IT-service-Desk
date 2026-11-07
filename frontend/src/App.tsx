@@ -13,6 +13,7 @@ import EditTicket from './ticket/EditTicket'
 import { useSelector } from 'react-redux'
 import type { RootState } from './store/store'
 import ProtectRoute from './utils/ProtectRoute'
+import Profile from './pages/Profile'
 
 const App = () => {
 
@@ -32,6 +33,7 @@ const App = () => {
                 <Route element={<ProtectRoute isAuthenticated={isAuthenticated} role={role} />}>
                     <Route path="/" element={<Home />}>
 
+                        <Route path='/profile' element={<Profile />} />
                         <Route path="tickets" element={<AllTicket />} />
                         <Route path="my-ticket" element={<MyTicket />} />
                         <Route path="create" element={<Create />} />

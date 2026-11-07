@@ -17,11 +17,13 @@ const ProtectRoute = ({ isAuthenticated, role }: PrivateProps) => {
         "/my-ticket",
         "/edit/",
         "/ticket/",
-        "/create"
+        "/create",
+        "/profile"
     ]
     if (role === "Employee" && 
-        !allowedRoutes.some(route => route.endsWith('/') ? pathname.startsWith(route) : pathname === route)
-    ) {
+        !allowedRoutes.includes(pathname) && !pathname.startsWith('/edit/') && !pathname.startsWith("/ticket/")
+    )
+     {
         return <Navigate to="/my-ticket" replace />
     }
 

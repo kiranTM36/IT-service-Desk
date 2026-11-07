@@ -257,7 +257,7 @@ const handleSubmitComment = async (e: React.FormEvent<HTMLFormElement>) => {
 
                 </div>
 
-                {/* Comment Message */}
+               
                 <div
                   className={`max-w-[75%] px-4 py-3 rounded-2xl text-sm leading-6 break-words ${
                     isMyComment

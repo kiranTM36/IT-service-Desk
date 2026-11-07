@@ -17,6 +17,8 @@ interface userInfo {
     username: string;
     roleId: number;
     role: string;
+    status : boolean
+    createdAt : Date
 }
 
 interface userState {
@@ -143,5 +145,21 @@ export function logOutAction(){
         } catch (error) {
             
         }
+    }
+}
+
+export function updateStatus(id : number){
+    return async function updateStatusThunk(){
+
+       try {
+         const response = await axios.post(`http://localhost:9999/user/status/${id}`)
+
+        if(response.status  === 200){
+            alert('success')
+            return true
+        }
+       } catch (error) {
+        alert('error')
+       }
     }
 }
