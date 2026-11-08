@@ -172,7 +172,7 @@ const getSingleUser = (req, res) => {
             id
         } = req.params
         const sql = `
-        SELECT u.*, r.* FROM user u JOIN role r ON u.roleId = r.id WHERE u.id = ?
+        SELECT u.*,u.id as uid, r.* FROM user u JOIN role r ON u.roleId = r.id WHERE u.id = ?
         `
 
         db.query(sql, [id], (err, result) => {

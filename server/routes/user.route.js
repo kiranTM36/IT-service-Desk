@@ -1,4 +1,6 @@
 const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus } = require('../controllers/userController')
+const authenticate = require('../middleware/authenticate')
+const authorize = require('../middleware/authorization')
 
 const route = require('express').Router()
 
@@ -14,6 +16,6 @@ route.post('/delete/:id' , deleteUser)
 
 route.post('/logout' , logOut)
 
-route.post('/status/:id' , updateStatus)
+route.post('/status/:id', authorize , authenticate('admin')  , updateStatus)
 
 module.exports = route

@@ -3,7 +3,7 @@ const db = require("../db")
 const getAllTeam = (req , res) => {
     try {
         const sql = `
-        SELECT * FROM team
+        SELECT t.*,u.* FROM team t JOIN user u ON t.createdBy = u.id
         `
         db.query(sql , (err , result) => {
             if(err){
@@ -38,7 +38,8 @@ const getAllTeam = (req , res) => {
 
 const createTeam = (req , res) => {
     try {
-        const {gName , gDesc , createdBy} = req.body
+        const createdBy = req.user.id
+        const {gName , gDesc } = req.body
 
         const sql = `
         INSERT INTO team (gName , gDesc , createdBy) VALUES (?,?,?)

@@ -13,7 +13,16 @@ const authorize = (req, res, next) => {
 
         const decoded = jwt.verify(token, process.env.JWT_KEY);
 
-        const sql = `SELECT id, email, roleId FROM user WHERE email = ?`;
+        const sql = `
+    SELECT 
+        u.id,
+        u.email,
+        u.roleId,
+        r.name
+    FROM user u
+    JOIN role r ON u.roleId = r.id
+    WHERE u.email = ?
+`;
 
         db.query(sql, [decoded.email], (err, result) => {
             if (err) {
@@ -28,6 +37,7 @@ const authorize = (req, res, next) => {
                     message: "User Not Found"
                 });
             }
+            
 
             req.user = result[0];
 

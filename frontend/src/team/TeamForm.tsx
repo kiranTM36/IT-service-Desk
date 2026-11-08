@@ -1,4 +1,7 @@
 import { useState } from "react"
+import { useDispatch } from "react-redux"
+import { type AppDispatch } from "../store/store"
+import { createTeam } from "../store/teamSlice"
 
 const TeamForm = () => {
 
@@ -7,6 +10,8 @@ const TeamForm = () => {
         gDesc : ""
     })
 
+    const dispatch = useDispatch<AppDispatch>()
+
     const handleChange = (e:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name , value} = e.target
         setData((data) => ({
@@ -14,9 +19,15 @@ const TeamForm = () => {
             [name] : value
         }))
     }
+
+    const handleTeamSubmit = (e:React.SubmitEvent<HTMLFormElement>) => {
+      e.preventDefault()
+      dispatch(createTeam(data))
+      
+    }
   return (
     <div className="flex h-full w-full justify-center items-center">
-      <form  className="bg-white text-gray-500 max-w-85 w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10">
+      <form onSubmit={handleTeamSubmit}  className="bg-white text-gray-500 max-w-85 w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10">
         <h2 className="text-2xl font-bold mb-9 text-center text-gray-800"></h2>
 
         <div className="flex items-center my-2 border bg-indigo-500/5 border-gray-500/10 rounded gap-1 pl-2">

@@ -6,7 +6,7 @@ const authenticate = (role) => {
             })
         }
 
-        if(req.user.role !== role){
+        if(req.user.name !== role){
             return res.status(400).json({
                 message : "Access Denied"
             })

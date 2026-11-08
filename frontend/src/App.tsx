@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import type { RootState } from './store/store'
 import ProtectRoute from './utils/ProtectRoute'
 import Profile from './pages/Profile'
+import Singleuser from './pages/Singleuser'
 
 const App = () => {
 
@@ -42,6 +43,7 @@ const App = () => {
                         <Route path="team" element={<Team />} />
                         <Route path="teamForm" element={<TeamForm />} />
                         <Route path="edit/:id" element={<EditTicket />} />
+                        <Route path='/:id' element={<Singleuser />} />
 
                     </Route>
                 </Route>

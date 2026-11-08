@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { type AppDispatch, type RootState } from '../store/store'
-import { getAllUser, updateStatus } from '../store/userSlice'
+import { getAllUser, getSingleUser, updateStatus } from '../store/userSlice'
+import { Link } from 'react-router-dom'
 
 const User = () => {
   const dispatch = useDispatch<AppDispatch>()
@@ -14,12 +15,11 @@ const User = () => {
     dispatch(getAllUser())
   }, [dispatch])
 
-  console.log(users);
 
   const handleDelete = (uid : number) => {
     dispatch(updateStatus(uid))
-    
   }
+
 
 
   return (
@@ -62,8 +62,10 @@ const User = () => {
                   {index + 1}
                 </td>
 
-                <td className="p-4 font-medium text-gray-800">
-                  {user.username}
+                <td className="p-4 font-medium text-gray-800" >
+                  <Link to={`/${user.uid}`}>
+                    {user.username}
+                  </Link>
                 </td>
 
                 <td className="p-4 text-gray-600">

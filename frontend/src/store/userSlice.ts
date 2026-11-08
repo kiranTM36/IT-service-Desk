@@ -24,12 +24,14 @@ interface userInfo {
 interface userState {
     users : userInfo[],
     user : userInfo | null,
+    singleUser : userInfo | null
     token : string | null
     status : string
 }
 
 const initialState : userState = {
     users : [],
+    singleUser : null,
     user: JSON.parse(localStorage.getItem('user') || 'null'),
     token: localStorage.getItem('token'),
     status: ''
@@ -41,6 +43,9 @@ const userSlice = createSlice({
     reducers : {
         setUsers (state , action : PayloadAction <userInfo[]>){
             state.users = action.payload
+        },
+        setSingleuser (state , action : PayloadAction <userInfo>){
+            state.singleUser = action.payload
         },
         setUser (state , action : PayloadAction <userInfo | null>){
             console.log("setUser payload:", action.payload);
@@ -55,7 +60,7 @@ const userSlice = createSlice({
     }
 })
 
-export const { setUser , setUsers , setToken , setStatus } = userSlice.actions
+export const { setUser , setUsers ,setSingleuser, setToken , setStatus } = userSlice.actions
 export default userSlice.reducer
 
 export function LoginAction(data: userData) {
@@ -152,7 +157,9 @@ export function updateStatus(id : number){
     return async function updateStatusThunk(){
 
        try {
-         const response = await axios.post(`http://localhost:9999/user/status/${id}`)
+         const response = await axios.post(`http://localhost:9999/user/status/${id}`, {}, {
+            withCredentials : true
+         })
 
         if(response.status  === 200){
             alert('success')
@@ -160,6 +167,23 @@ export function updateStatus(id : number){
         }
        } catch (error) {
         alert('error')
+        console.log(error);
+        
        }
+    }
+}
+
+export function getSingleUser(id : number){
+    return async function getUserThunk(dispatch:AppDispatch) {
+        dispatch(setStatus(status.LOADING))
+
+        try {
+            const response = await axios.get(`http://localhost:9999/user/${id}`)
+
+            dispatch(setSingleuser(response.data.data));
+            
+        } catch (error) {
+            
+        }
     }
 }
