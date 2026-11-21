@@ -21,7 +21,6 @@ const Team = () => {
     return (
         <div className="space-y-5">
 
-            {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
                     <h2 className="text-xl font-semibold text-gray-800">
@@ -41,7 +40,6 @@ const Team = () => {
                 </Link>
             </div>
 
-            {/* Team Table */}
             <div className="w-full overflow-x-auto rounded-2xl bg-white shadow-sm">
 
                 <table className="w-full text-left">

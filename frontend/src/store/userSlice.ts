@@ -75,7 +75,6 @@ export function LoginAction(data: userData) {
                 { withCredentials: true }
             );
 
-            console.log("Backend response:", response.data);
 
             const user = response.data.data;
             const token = response.data.token;
@@ -179,6 +178,7 @@ export function getSingleUser(id : number){
 
         try {
             const response = await axios.get(`http://localhost:9999/user/${id}`)
+            
 
             dispatch(setSingleuser(response.data.data));
             

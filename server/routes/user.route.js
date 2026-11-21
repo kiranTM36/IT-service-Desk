@@ -1,4 +1,4 @@
-const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus } = require('../controllers/userController')
+const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus, getTeam } = require('../controllers/userController')
 const authenticate = require('../middleware/authenticate')
 const authorize = require('../middleware/authorization')
 

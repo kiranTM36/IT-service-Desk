@@ -4,6 +4,7 @@ import ticketSlice from './ticketSlice'
 import userSlice from './userSlice'
 import commentSlice from './commentSlice' 
 import teamSlice from './teamSlice'
+import profileSlice from './profile'
 
 export const store = configureStore({
     reducer : {
@@ -11,7 +12,8 @@ export const store = configureStore({
         ticket : ticketSlice,
         user : userSlice ,
         comment : commentSlice,
-        team : teamSlice
+        team : teamSlice,
+        profile : profileSlice
     }
 })
 

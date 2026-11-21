@@ -19,7 +19,9 @@ const ticketModule = require('./modules/ticketModule')
 const teamModule = require('./modules/teamModules')
 const userTeamModule = require('./modules/userTeamModule')
 const commentModule = require('./modules/commentModules')
+const profileModule = require('./modules/profilrModule')
 
+profileModule()
 roleModules()
 teamModule()
 userModules()
@@ -35,6 +37,7 @@ const categoryRoute = require('./routes/category.route')
 const ticketRoute = require('./routes/ticket.route')
 const teamRoute = require('./routes/team.route')
 const commentRoute = require('./routes/comment.route')
+const profileRoute = require('./routes/profile.route')
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -50,6 +53,7 @@ app.use('/category' , categoryRoute)
 app.use('/ticket' , ticketRoute)
 app.use('/team' , teamRoute)
 app.use('/comment' , commentRoute)
+app.use('/profile' , profileRoute)
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running ");

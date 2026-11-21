@@ -1,9 +1,12 @@
 import { useSelector } from "react-redux"
 import type { RootState } from "../store/store"
+import { Link } from "react-router-dom"
 
 const Profile = () => {
 
     const {user} = useSelector((state:RootState) => state.user )
+    console.log(user);
+    
   return (
     
 
@@ -29,9 +32,10 @@ const Profile = () => {
                     {user?.name}
                 </p>
 
+                <Link to={`/edit/${user?.uid}`}>
                 <button className="mt-4 bg-indigo-800 text-white px-4 py-2 rounded-lg hover:bg-blue-900">
                     Edit Profile
-                </button>
+                </button></Link>
 
             </div>
 

@@ -144,4 +144,26 @@ const addMemeber = (req, res) => {
     }
 };
 
-module.exports = { getAllTeam  , createTeam  , deleteTeam , deleteTeam , addMemeber }
+const allmyTeamTicket = (req, res) => {
+    try {
+        const sql = `
+            SELECT t.*,tm.* from ticket t join team tm ON tm.gId = t.teamId where t.teamId = 1
+        `;
+
+        db.query(sql, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ message: "Database error" });
+            }
+
+            res.status(200).json({
+                data: result
+            });
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+module.exports = { getAllTeam  , createTeam  , deleteTeam , deleteTeam , addMemeber , allmyTeamTicket}

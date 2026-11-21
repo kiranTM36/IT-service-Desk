@@ -8,7 +8,7 @@ import { useState } from "react"
 const Navbar = () => {
 
   const defaultPic = "https://static.vecteezy.com/system/resources/previews/024/983/914/non_2x/simple-user-default-icon-free-png.png"
-  const showDiv = "w-full flex justify-center items-center px-2 py-1 rounded-md hover:bg-gray-200"
+  const showDiv = "w-full flex justify-center items-center px-2 py-1 rounded-md hover:bg-gray-200 cursor-pointer"
   const dispatch = useDispatch<AppDispatch>()
   const { user } = useSelector((state: RootState) => state.user);
 
@@ -41,7 +41,7 @@ const Navbar = () => {
           </Link>
 
           <div className="">
-            <div onClick={() => setShow(!show)} className={`rounded-full h-7 w-7 flex justify-center items-center bg-center bg-no-repeat bg-cover`} style={{
+            <div onClick={() => setShow(!show)} className={`rounded-full h-7 w-7 flex justify-center items-center cursor-pointer bg-center bg-no-repeat bg-cover`} style={{
               backgroundImage: `url("${user?.profile ? user.profile : defaultPic}")`
             }}>
             </div>

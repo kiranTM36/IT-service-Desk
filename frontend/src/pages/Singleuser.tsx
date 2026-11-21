@@ -3,6 +3,7 @@ import { type AppDispatch, type RootState } from "../store/store"
 import { useParams } from "react-router-dom"
 import { useEffect } from "react"
 import { getSingleUser } from "../store/userSlice"
+import { getProfile } from "../store/profile"
 
 const Singleuser = () => {
 
@@ -10,10 +11,15 @@ const Singleuser = () => {
     const dispatch = useDispatch<AppDispatch>()
     
     const {singleUser} = useSelector((state:RootState) => state.user )
+    const {profile} = useSelector((state:RootState) => state.profile)
 
     useEffect(() => {
         dispatch(getSingleUser(Number(id)))
-    }, [dispatch])
+        dispatch(getProfile(Number(id)))
+    }, [dispatch , id])
+
+    console.log(singleUser);
+    
   return (
     
 
@@ -52,8 +58,7 @@ const Singleuser = () => {
                 </h2>
 
                 <p className="text-gray-700 mb-6">
-                    Passionate software developer with 5 years of experience in web technologies.
-                    I love creating user-friendly applications and solving complex problems.
+                    {profile?.bio}
                 </p>
 
                 <h2 className="text-xl font-semibold text-indigo-800 mb-4">
@@ -87,12 +92,12 @@ const Singleuser = () => {
 
                     <li className="flex items-center gap-2">
                         <span className="text-indigo-800">☎</span>
-                        +1 (555) 123-4567
+                        +977 {profile?.phone}
                     </li>
 
                     <li className="flex items-center gap-2">
                         <span className="text-indigo-800">📍</span>
-                        {singleUser?.uid}
+                        {profile?.address}
                     </li>
 
                 </ul>

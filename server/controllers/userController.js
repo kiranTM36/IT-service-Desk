@@ -67,7 +67,7 @@ const login = (req, res) => {
         }
 
         const sql = `
-            SELECT u.*, u.id as uid ,r.* FROM user u JOIN role r ON u.roleId = r.id WHERE email=?
+            SELECT u.*, u.id as uid ,r.*,ut.* FROM user u JOIN role r ON u.roleId = r.id join user_team ut ON ut.userId = u.id  WHERE u.email=?
         `
 
         db.query(sql, [email], (err, result) => {
@@ -309,6 +309,7 @@ const updateStatus = (req, res) => {
         })
     }
 }
+
 
 module.exports = {
     signUp,

@@ -21,6 +21,7 @@ const Sidenav = () => {
         : (
           <>
           <NavLink to='/my-ticket' className={({ isActive }) => `default ${isActive ? 'inActive' : ''}`}>My Ticket</NavLink>
+          <NavLink to='/team' className={({ isActive }) => ` default ${isActive ? 'inActive' : ''}`}>Team</NavLink>
           </>
         )
       }

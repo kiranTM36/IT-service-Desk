@@ -20,12 +20,29 @@ const ProtectRoute = ({ isAuthenticated, role }: PrivateProps) => {
         "/create",
         "/profile"
     ]
+
+    const SupportAgentRoute = [
+        "/my-ticket",
+        "/edit/",
+        "/ticket/",
+        "/create",
+        "/profile",
+        "/team"
+    ]
     if (role === "Employee" && 
         !allowedRoutes.includes(pathname) && !pathname.startsWith('/edit/') && !pathname.startsWith("/ticket/")
     )
      {
         return <Navigate to="/my-ticket" replace />
     }
+
+    if (role === "Support Agent" && 
+        !SupportAgentRoute.includes(pathname) && !pathname.startsWith('/edit/') && !pathname.startsWith("/ticket/")
+    )
+     {
+        return <Navigate to="/my-ticket" replace />
+    }
+
 
     return <Outlet />
 }

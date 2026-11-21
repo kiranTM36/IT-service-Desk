@@ -15,6 +15,7 @@ import type { RootState } from './store/store'
 import ProtectRoute from './utils/ProtectRoute'
 import Profile from './pages/Profile'
 import Singleuser from './pages/Singleuser'
+import EditUser from './auth/EditUser'
 
 const App = () => {
 
@@ -35,6 +36,7 @@ const App = () => {
                     <Route path="/" element={<Home />}>
 
                         <Route path='/profile' element={<Profile />} />
+                        <Route path='/edit/:id' element={<EditUser />} />
                         <Route path="tickets" element={<AllTicket />} />
                         <Route path="my-ticket" element={<MyTicket />} />
                         <Route path="create" element={<Create />} />
