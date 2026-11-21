@@ -16,6 +16,7 @@ import ProtectRoute from './utils/ProtectRoute'
 import Profile from './pages/Profile'
 import Singleuser from './pages/Singleuser'
 import EditUser from './auth/EditUser'
+import MyTeam from './pages/MyTeam'
 
 const App = () => {
 
@@ -43,6 +44,7 @@ const App = () => {
                         <Route path="user" element={<User />} />
                         <Route path="ticket/:id" element={<SingleTicket />} />
                         <Route path="team" element={<Team />} />
+                        <Route path="Myteam" element={<MyTeam />} />
                         <Route path="teamForm" element={<TeamForm />} />
                         <Route path="edit/:id" element={<EditTicket />} />
                         <Route path='/:id' element={<Singleuser />} />
