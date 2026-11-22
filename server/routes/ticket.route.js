@@ -1,4 +1,4 @@
-const { createTicket, getAllTicket, getSingleTicket, deleteTicket, getMyTicket } = require('../controllers/ticketController')
+const { createTicket, getAllTicket, getSingleTicket, deleteTicket, getMyTicket, updateStatus } = require('../controllers/ticketController')
 const authorize = require('../middleware/authorization')
 const authenticate = require('../middleware/authenticate')
 const uploads = require('../middleware/multer')
@@ -12,7 +12,8 @@ route.get('/my-tickets' , authorize , getMyTicket)
 
 route.get('/:id' , getSingleTicket)
 
-route.delete('/delete/:id' , deleteTicket)
+route.post('/update/:id' , updateStatus)
 
+route.delete('/delete/:id' , deleteTicket)
 
 module.exports = route

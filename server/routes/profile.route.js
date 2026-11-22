@@ -5,7 +5,7 @@ const route = require('express').Router()
 
 route.get('/:id' , getProfile)
 
-route.post('/add' , addProfile)
+route.post('/add/:id' , addProfile)
 
 route.patch('/update/:id' , updateProfile)
 

@@ -9,6 +9,7 @@ interface teamData {
     gDesc : string
     createdAt : Date
     username : string
+    createdBy : number
 }
 
 interface FormData {
@@ -18,11 +19,13 @@ interface FormData {
 
 interface teamState {
     teams : teamData[],
+    myteam : teamData | null
     status : string
 }
 
 const initialState : teamState = {
     teams : [],
+    myteam : null ,
     status : '',
 }
 
@@ -35,11 +38,14 @@ const teamSlice = createSlice({
         },
         setStatus(state , action : PayloadAction<string>){
             state.status = action.payload
+        },
+        setTeam(state , action : PayloadAction<teamData>){
+            state.myteam = action.payload
         }
     }
 })
 
-export const {setStatus , setTeams} = teamSlice.actions
+export const {setStatus , setTeams , setTeam} = teamSlice.actions
 export default teamSlice.reducer
 
 export function getAllTeam(){
@@ -79,3 +85,35 @@ export function createTeam(data : FormData){
         }
     }
 } 
+
+// export function getMyTask(){
+//     return async function getMyTaskThunk(dispatch:AppDispatch) {
+
+//         dispatch(setStatus(status.LOADING))
+//         try {
+//             const response = await axios.get('http://localhost:9999/team/mytask')
+
+//             dispatch(setTeam(response.data.data))
+
+//             console.log(response.data.data);
+            
+//         } catch (error) {
+            
+//         }
+//     }
+// }
+
+export function getMyTeam(){
+    return async function getMyTeamThunk(dispatch:AppDispatch) {
+
+        dispatch(setStatus(status.LOADING))
+        try {
+            const response = await axios.get('http://localhost:9999/team/myteam')
+
+            dispatch(setTeam(response.data.data))
+
+        } catch (error) {
+            
+        }
+    }
+}

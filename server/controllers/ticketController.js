@@ -149,7 +149,7 @@ const getMyTicket = (req, res) => {
         const userId = req.user
 
         const sql = `
-        SELECT t.*,t.id as tId, u.*, c.*, r.*
+        SELECT t.*,t.id as tId,t.status as tStatus, u.*, c.*, r.*
         FROM ticket t
         JOIN user u ON t.userId = u.id
         JOIN category c ON t.cId = c.id
@@ -188,6 +188,33 @@ const getMyTicket = (req, res) => {
     }
 };
 
+const updateStatus = (req , res) => {
+    try {
+        const {id} = req.params
+
+        const sql = `
+        UPDATE ticket set status = !status WHERE id=?
+        `
+
+        db.query(sql , [id] , (err , result) => {
+            if (err) {
+                console.log("Ticket Error:", err);
+                return res.status(500).json({
+                    message: "Error fetching tickets",
+                    success: false
+                });
+            }
+
+            res.status(200).json({
+                message : "SuccessFully Updated",
+                success : true
+            })
+        })
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
-    createTicket , getAllTicket , getSingleTicket , deleteTicket , getMyTicket
+    createTicket , getAllTicket , getSingleTicket , deleteTicket , getMyTicket , updateStatus
 }

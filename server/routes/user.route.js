@@ -1,4 +1,4 @@
-const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus, getTeam } = require('../controllers/userController')
+const { signUp, login, getAllUser, getSingleUser, deleteUser, logOut, updateStatus, getTeam, googleSignup, googleLogin } = require('../controllers/userController')
 const authenticate = require('../middleware/authenticate')
 const authorize = require('../middleware/authorization')
 
@@ -13,6 +13,10 @@ route.get('/' , getAllUser)
 route.get('/:id' , getSingleUser)
 
 route.post('/delete/:id' , deleteUser)
+
+route.post('/googleSignup' , googleSignup)
+
+route.post('/googleLogin' , googleLogin)
 
 route.post('/logout' , logOut)
 

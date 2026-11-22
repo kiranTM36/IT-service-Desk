@@ -86,6 +86,13 @@ const login = (req, res) => {
                 });
             }
 
+            if(result[0].status === 0){
+                return res.status(400).json({
+                   message :  "Cannot Login",
+                   success : false
+                })
+            }
+
             const isMatch = bcrypt.compareSync(password, result[0].password)
 
             if (!isMatch) {
@@ -310,6 +317,82 @@ const updateStatus = (req, res) => {
     }
 }
 
+const googleSignup = (req, res) => {
+  try {
+    const { email, sub, name } = req.body;
+
+    const sql = `
+      INSERT INTO user (username, email, google_id)
+      VALUES (?, ?, ?)
+    `;
+
+    db.query(sql, [name, email, sub], (err, result) => {
+      if (err) {
+        console.log("Google Signup error:", err);
+
+        return res.status(500).json({
+          message: "error",
+          success: false,
+        });
+      }
+
+      return res.status(200).json({
+        message: "Google Signup Successfully",
+        success: true,
+      });
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
+
+const googleLogin = (req , res) => {
+    try {
+        const {email} = req.body
+
+        const sql = `
+        SELECT * FROM user WHERE email=?
+        `
+
+        db.query(sql , [email] , (err , result) => {
+            if(err){
+                console.log(err);
+                return res.status(500).json({
+                    message : "Error",
+                    success : false
+                })
+            }
+
+            const token = jwt.sign({
+                id: result[0].id,
+                email: result[0].email,
+                role: result[0].role
+            }, process.env.JWT_KEY, {
+                expiresIn: '30d'
+            })
+
+            res.cookie('token', token, {
+                maxAge: 1000 * 60 * 60 * 24 * 30,
+                httpOnly: true
+            })
+
+            res.status(200).json({
+                message: "Login Success",
+                success: true,
+                token: token,
+                data: result[0]
+            })
+            
+        })
+    } catch (error) {
+        
+    }
+}
 
 module.exports = {
     signUp,
@@ -318,5 +401,7 @@ module.exports = {
     getSingleUser,
     deleteUser,
     logOut,
-    updateStatus
+    updateStatus,
+    googleSignup,
+    googleLogin
 }

@@ -12,7 +12,6 @@ interface props{
 
 const Ticket:React.FC<props> = ({name , tickets}) => {
     const tableRowStyle = "px-6 py-4 font-semibold text-center"
-    const divClass = "bg-white h-full w-1/4 shadow rounded-md"
 
     const [search, setSearch] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("")
@@ -43,29 +42,15 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
         
         dispatch(deleteTicket(Number(id)))
         
-    }
+    } 
     
-
     return (
         <div className="flex flex-col items-center justify-center gap-3">
             <div className="text-left w-full">
                 <h1 className="font-bold text-3xl">{name}</h1>
                 <span className="text-gray-700 text-[16px]">Manage , Track and Follow up on all request Submits</span>
             </div>
-            <div className="h-[14vh] w-full flex justify-evenly items-center gap-4">
-                <div className={`${divClass} flex justify-left items-left flex-col px-4 py-2`}>
-                    <div>Total Ticket</div>
-                    <h1 className="font-semibold text-3xl text-right">{tickets.length}</h1>
-                </div>
-
-                <div className={`${divClass} flex justify-left items-left flex-col px-4 py-2`}>
-                    <div>Total Ticket</div>
-                    <h1 className="font-semibold text-3xl">{tickets.filter((ticket) => ticket.tStatus == false).length}</h1>
-                </div>
-
-                <div className={divClass}></div>
-                <div className={divClass}></div>
-            </div>
+            
             <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
                 <div className="flex h-[10vh] w-full items-center justify-start gap-4 bg-white px-4">
 
@@ -164,13 +149,13 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                                     <td className="whitespace-nowrap px-6 py-4">
                                         <span
                                             className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-                                                ticket.tStatus === true
+                                                ticket.tStatus
                                                     ? "bg-green-50 text-green-700"
                                                     : "bg-amber-50 text-amber-700"
                                             }`}
                                         >
                                             <span className="h-1.5 w-1.5 rounded-full bg-current" />
-                                            {ticket.tStatus === true
+                                            {ticket.tStatus
                                                 ? "Complete"
                                                 : "Pending"}
                                         </span>

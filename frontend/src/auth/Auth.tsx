@@ -1,102 +1,230 @@
-import { useAuth0 } from "@auth0/auth0-react";
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import type { userData } from "../store/userSlice"
 
-interface props {
-  name: string
-  onEvent: (data: userData) => void
+import { useAuth0 } from "@auth0/auth0-react";
+import { useEffect, useRef, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { googleSignup, type userData } from "../store/userSlice";
+import type { AppDispatch } from "../store/store";
+
+interface Props {
+  name: string;
+  onEvent: (data: userData) => void;
 }
 
-const Auth: React.FC<props> = ({ name , onEvent }) => {
+const Auth: React.FC<Props> = ({ name, onEvent }) => {
+  const {
+    loginWithRedirect,
+    isLoading,
+    isAuthenticated,
+    user,
+  } = useAuth0();
 
-  const {loginWithRedirect:login , user , isAuthenticated , isLoading} = useAuth0()
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const googleProcessed = useRef(false);
 
   const [data, setData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  })
+    username: "",
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
+  const [error, setError] = useState("");
 
-    setData((data) => ({
-      ...data,
-      [name]: value
-    }))
+  // Normal email/password input
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Normal signup/login
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onEvent(data as userData);
+  };
+
+  // Google login and signup use the same Auth0 flow
+  const handleGoogleAuth = async () => {
+    try {
+      setError("");
+
+      // Save this before redirecting because React state
+      // will not survive the Auth0 redirect.
+      sessionStorage.setItem("googleAuthRequested", "true");
+
+      await loginWithRedirect({
+        authorizationParams: {
+          connection: "google-oauth2",
+        },
+        appState: {
+          returnTo: window.location.pathname,
+        },
+      });
+    } catch (error) {
+      sessionStorage.removeItem("googleAuthRequested");
+      console.error("Google authentication error:", error);
+      setError("Unable to start Google authentication.");
+    }
+  };
+
+  // Runs after Auth0 redirects back to the application
+  useEffect(() => {
+    const processGoogleAuth = async () => {
+      const requested = sessionStorage.getItem("googleAuthRequested");
+
+      // Do not call backend just because Auth0 has a session.
+      if (!requested || !isAuthenticated || !user) return;
+
+      // Prevent duplicate requests.
+      if (googleProcessed.current) return;
+
+      if (!user.email || !user.sub) {
+        setError("Google account email or ID is missing.");
+        sessionStorage.removeItem("googleAuthRequested");
+        return;
+      }
+
+      googleProcessed.current = true;
+      sessionStorage.removeItem("googleAuthRequested");
+
+      try {
+        const googleData = {
+          email: user.email,
+          sub: user.sub,
+          name: user.name || user.nickname || user.email,
+        };
+
+        console.log("Sending Google user to backend:", googleData);
+
+        const response = await dispatch(googleSignup(googleData));
+
+        console.log("Google backend response:", response);
+
+        // Your thunk should return response.data.
+        if (response?.success === true || response?.success === undefined) {
+          navigate("/");
+        } else {
+          setError("Google authentication failed.");
+          googleProcessed.current = false;
+        }
+      } catch (error) {
+        console.error("Google backend error:", error);
+        setError("Google authentication failed. Please try again.");
+        googleProcessed.current = false;
+      }
+    };
+
+    processGoogleAuth();
+  }, [isAuthenticated, user, dispatch, navigate]);
+
+  if (isLoading) {
+    return <p className="text-center mt-10">Loading...</p>;
   }
 
- const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  onEvent(data);
-};
-
-const signup = () =>
-    login({ authorizationParams: { screen_hint: "signup" } });
-
-
-if(isLoading){
-  console.log("loading");
-}
-
-if(isAuthenticated){
-  console.log(user);
-  
-}
   return (
     <div className="flex h-screen w-screen justify-center items-center">
-      <form onSubmit={handleSubmit} className="bg-white text-gray-500 max-w-85 w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10">
-        <h2 className="text-2xl font-bold mb-9 text-center text-gray-800">{name}</h2>
-        {
-          name === "Sign up" && (
-            <div className="flex items-center my-2 border bg-indigo-500/5 border-gray-500/10 rounded gap-1 pl-2">
-              <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3.125 13.125a4.375 4.375 0 0 1 8.75 0M10 4.375a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" stroke="#6B7280" strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <input onChange={handleChange} className="w-full outline-none bg-transparent py-2.5" type="text" placeholder="Username" name="username" required />
-            </div>
-          )
-        }
-        <div className="flex items-center my-2 border bg-indigo-500/5 border-gray-500/10 rounded gap-1 pl-2">
-          <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="m2.5 4.375 3.875 2.906c.667.5 1.583.5 2.25 0L12.5 4.375" stroke="#6B7280" strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M11.875 3.125h-8.75c-.69 0-1.25.56-1.25 1.25v6.25c0 .69.56 1.25 1.25 1.25h8.75c.69 0 1.25-.56 1.25-1.25v-6.25c0-.69-.56-1.25-1.25-1.25Z" stroke="#6B7280" strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" />
-          </svg>
-          <input onChange={handleChange} className="w-full outline-none bg-transparent py-2.5" type="email" placeholder="Email" name="email" required />
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white text-gray-500 max-w-85 w-full mx-4 md:p-6 p-4 py-8 text-left text-sm rounded-lg shadow-[0px_0px_10px_0px] shadow-black/10"
+      >
+        <h2 className="text-2xl font-bold mb-9 text-center text-gray-800">
+          {name}
+        </h2>
+
+        {name === "Sign up" && (
+          <input
+            onChange={handleChange}
+            value={data.username}
+            className="w-full border rounded p-2.5 my-2"
+            type="text"
+            placeholder="Username"
+            name="username"
+            required
+          />
+        )}
+
+        <input
+          onChange={handleChange}
+          value={data.email}
+          className="w-full border rounded p-2.5 my-2"
+          type="email"
+          placeholder="Email"
+          name="email"
+          required
+        />
+
+        <input
+          onChange={handleChange}
+          value={data.password}
+          className="w-full border rounded p-2.5 my-2 mb-8"
+          type="password"
+          placeholder="Password"
+          name="password"
+          required
+        />
+
+        <button
+          type="submit"
+          className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600 py-2.5 rounded text-white font-medium"
+        >
+          {name === "Login" ? "Login" : "Create Account"}
+        </button>
+
+        <div className="flex items-center gap-3 my-4">
+          <div className="h-px bg-gray-200 flex-1" />
+          <span>OR</span>
+          <div className="h-px bg-gray-200 flex-1" />
         </div>
-        <div className="flex items-center mt-2 mb-8 border bg-indigo-500/5 border-gray-500/10 rounded gap-1 pl-2">
-          <svg width="18" height="18" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="m2.5 4.375 3.875 2.906c.667.5 1.583.5 2.25 0L12.5 4.375" stroke="#6B7280" strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M11.875 3.125h-8.75c-.69 0-1.25.56-1.25 1.25v6.25c0 .69.56 1.25 1.25 1.25h8.75c.69 0 1.25-.56 1.25-1.25v-6.25c0-.69-.56-1.25-1.25-1.25Z" stroke="#6B7280" strokeOpacity=".6" strokeWidth="1.3" strokeLinecap="round" />
-          </svg>
-          <input onChange={handleChange} className="w-full outline-none bg-transparent py-2.5" type="password" placeholder="Password" name="password" required />
-        </div>
 
+        <button
+          type="button"
+          onClick={handleGoogleAuth}
+          className="px-4 py-2 border rounded-md w-full flex gap-2 items-center justify-center hover:bg-gray-50"
+        >
+          <img
+            className="w-6 h-6"
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+          />
 
+          {name === "Sign up"
+            ? "Sign up with Google"
+            : "Login with Google"}
+        </button>
 
-        <button className="w-full mb-3 bg-indigo-500 hover:bg-indigo-600 transition-all active:scale-95 py-2.5 rounded text-white font-medium">Create Account</button>
+        {error && (
+          <p className="text-red-500 text-center mt-4">
+            {error}
+          </p>
+        )}
 
-        <div className="flex items-center justify-center">
-          <button onClick={signup} className="px-4 py-2 border flex gap-2 border-slate-200 rounded-md text-slate-700 dark:text-slate-200 hover:border-slate-400  hover:text-slate-900 hover:shadow transition duration-150 w-full items-center justify-center">
-            <img className="w-6 h-6" src="https://www.svgrepo.com/show/475656/google-color.svg" loading="lazy" alt="google logo" />
-            <span className="text-gray-600">Login with Google</span>
-          </button>
-        </div>
+        {name === "Sign up" && (
+          <p className="text-center mt-4">
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 underline">
+              Log In
+            </Link>
+          </p>
+        )}
 
-        {
-          name === "Sign up" && 
-          (<p className="text-center mt-4">Already have an account? <Link to='/login' className="text-blue-500 underline">Log In</Link></p>)
-        }
-
-        {
-          name === "Login" && 
-          (<p className="text-center mt-4">Didn't Already have an account? <Link to='/signup' className="text-blue-500 underline">Sign Up</Link></p>)
-        }
-
+        {name === "Login" && (
+          <p className="text-center mt-4">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-blue-500 underline">
+              Sign Up
+            </Link>
+          </p>
+        )}
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default Auth
+export default Auth;

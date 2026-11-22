@@ -3,7 +3,7 @@ const db = require("../db")
 const getAllTeam = (req , res) => {
     try {
         const sql = `
-        SELECT t.*,u.* FROM team t JOIN user u ON t.createdBy = u.id
+        SELECT t.*,u.username FROM team t JOIN user u ON t.createdBy = u.id
         `
         db.query(sql , (err , result) => {
             if(err){
@@ -147,7 +147,7 @@ const addMemeber = (req, res) => {
 const allmyTeamTicket = (req, res) => {
     try {
         const sql = `
-            SELECT t.*,tm.* from ticket t join team tm ON tm.gId = t.teamId where t.teamId = 1
+            SELECT t.status as tStatus, t.id as tId ,t.*, u.* FROM ticket t JOIN user u ON u.id = t.userId WHERE t.teamId = 2
         `;
 
         db.query(sql, (err, result) => {
@@ -165,5 +165,28 @@ const allmyTeamTicket = (req, res) => {
     }
 };
 
+//SELECT t.gName, u.* FROM user_team ut JOIN team t ON t.gId = ut.teamId JOIN user u ON u.id = ut.userId WHERE ut.teamId = 1
 
-module.exports = { getAllTeam  , createTeam  , deleteTeam , deleteTeam , addMemeber , allmyTeamTicket}
+const myTeam = (req , res) => {
+    try {
+
+        const sql = `
+        SELECT * FROM team where gId=2
+        `
+        db.query(sql, (err, result) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ message: "Database error" });
+            }
+
+            res.status(200).json({
+                data: result[0]
+            });
+        });
+    } catch (error) {
+        
+    }
+}
+
+
+module.exports = { getAllTeam  , createTeam  , deleteTeam  , addMemeber , allmyTeamTicket , myTeam }

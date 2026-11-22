@@ -2,13 +2,14 @@ const db = require("../db")
 
 const addProfile = (req , res) => {
     try {
-        const {address , phone , bio , userId} = req.body
+        const {address , phone , bio } = req.body
+        const {id} = req.params
 
         const sql = `
         INSERT INTO profile (address,phone,bio,userId) VALUES (?,?,?,?)
         `
 
-        db.query(sql , [address , phone , bio , userId] , (err , result) => {
+        db.query(sql , [address , phone , bio , id] , (err , result) => {
             if(err){
                 return res.status(500).json({
                     message : "Unsuccessfully",

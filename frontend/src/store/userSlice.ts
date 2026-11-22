@@ -187,3 +187,46 @@ export function getSingleUser(id : number){
         }
     }
 }
+
+interface googleSignup {
+  email: string;
+  name: string;
+  sub: string;
+}
+
+export function googleSignup(data: googleSignup) {
+  return async function googleSignUpThunk(dispatch: AppDispatch) {
+    dispatch(setStatus(status.LOADING));
+
+    try {
+      console.log("Sending Google data:", data);
+
+      const response = await axios.post(
+        "http://localhost:9999/user/googleSignup",
+        data
+      );
+
+      console.log("Backend response:", response.data);
+
+      dispatch(setStatus(status.SUCCESS));
+
+      return response.data;
+
+    } catch (error) {
+      console.error("Google signup error:", error);
+
+      dispatch(setStatus(status.ERRROR));
+
+      throw error;
+    }
+  };
+}
+
+export function googleLogin(data : googleSignup){
+    return async function googleLoginTHunk(dispatch:AppDispatch) {
+        dispatch(setStatus(status.LOADING))
+
+        const response = await axios.post("http://localhost:9999/user/googleSignup", data)
+        dispatch(setUser(response.data.data))
+    }
+}

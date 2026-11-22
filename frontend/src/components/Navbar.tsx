@@ -4,18 +4,25 @@ import { Link } from "react-router-dom"
 import { type AppDispatch, type RootState } from "../store/store"
 import { logOutAction } from "../store/userSlice"
 import { useState } from "react"
+import { useAuth0 } from "@auth0/auth0-react"
 
 const Navbar = () => {
 
   const defaultPic = "https://static.vecteezy.com/system/resources/previews/024/983/914/non_2x/simple-user-default-icon-free-png.png"
   const showDiv = "w-full flex justify-center items-center px-2 py-1 rounded-md hover:bg-gray-200 cursor-pointer"
   const dispatch = useDispatch<AppDispatch>()
-  const { user } = useSelector((state: RootState) => state.user);
+  // const { user } = useSelector((state: RootState) => state.user);
 
   const [show, setShow] = useState(false)
 
 
-  console.log(user?.profile);
+  const {
+    user
+  } = useAuth0();
+
+  console.log({
+    user
+  });
 
 
   const handleLogout = async () => {

@@ -15,6 +15,7 @@ const Sidenav = () => {
             <NavLink to='/my-ticket' className={({ isActive }) => `default ${isActive ? 'inActive' : ''}`}>My Ticket</NavLink>
             <NavLink to='/user' className={({ isActive }) => ` default ${isActive ? 'inActive' : ''}`}>User</NavLink>
             <NavLink to='/team' className={({ isActive }) => ` default ${isActive ? 'inActive' : ''}`}>Team</NavLink>
+            <NavLink to="/myTeam" className={({ isActive }) => ` default ${isActive ? 'inActive' : ''}`}>Team Info</NavLink>
           </>
         )
 

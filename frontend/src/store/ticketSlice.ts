@@ -168,3 +168,30 @@ export function deleteTicket(id : number, name?: string){
         }
     }
 }
+
+export function getMyTeamTicket() {
+    return async function geyMyTicketThunk(dispatch:AppDispatch) {
+        try {
+            const response =await axios.get('http://localhost:9999/team/myTask')
+
+            dispatch(setTickets(response.data.data))
+            
+        } catch (error) {
+            
+        }
+    }
+}
+
+export function updateStatus(id : number){
+    return async function updateStatusThunk(dispatch:AppDispatch) {
+        dispatch(setStatus(status.LOADING))
+
+        try {
+            await axios.post(`http://localhost:9999/ticket/update/${id}`)
+            return true
+            
+        } catch (error) {
+            return false
+        }
+    }
+}
