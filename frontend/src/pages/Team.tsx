@@ -14,6 +14,10 @@ const Team = () => {
         (state: RootState) => state.team
     )
 
+    const { user } = useSelector(
+        (state: RootState) => state.user
+    )
+
     useEffect(() => {
         dispatch(getAllTeam())
     }, [dispatch])
@@ -31,13 +35,18 @@ const Team = () => {
                     </p>
                 </div>
 
-                <Link
+                {
+                    user?.name === "admin" &&
+                    (
+                        <Link
                     to="/teamForm"
                     className="bg-[#4F46E5] flex items-center gap-2 px-3 py-2 text-white rounded-md"
                 >
                     <Plus size={18} />
                     Create Team
                 </Link>
+                    )
+                }
             </div>
 
             <div className="w-full overflow-x-auto rounded-2xl bg-white shadow-sm">

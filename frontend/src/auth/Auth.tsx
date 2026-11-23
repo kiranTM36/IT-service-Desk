@@ -44,19 +44,14 @@ const Auth: React.FC<Props> = ({ name, onEvent }) => {
     }));
   };
 
-  // Normal signup/login
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onEvent(data as userData);
   };
 
-  // Google login and signup use the same Auth0 flow
   const handleGoogleAuth = async () => {
     try {
       setError("");
-
-      // Save this before redirecting because React state
-      // will not survive the Auth0 redirect.
       sessionStorage.setItem("googleAuthRequested", "true");
 
       await loginWithRedirect({

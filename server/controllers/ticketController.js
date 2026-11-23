@@ -9,10 +9,10 @@ const createTicket = (req , res) => {
         const image = req.file ? req.file.filename : null
 
         const sql = `
-        INSERT INTO ticket (title , cId, userId ,description ,priority, image) VALUES (?,?,?,?,?,?)
+        INSERT INTO ticket (title , cId, userId ,description ,priority, image , teamId) VALUES (?,?,?,?,?,?,?)
         `
 
-        db.query(sql , [title , cId , userId, description , priority , image] , (err , result) => {
+        db.query(sql , [title , cId , userId, description , priority , image , cId] , (err , result) => {
             if(err){
                 console.log("Create Ticket Error : ", err);
                 return res.status(500).json({

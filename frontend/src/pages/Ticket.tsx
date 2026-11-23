@@ -47,19 +47,19 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
     return (
         <div className="flex flex-col items-center justify-center gap-3">
             <div className="text-left w-full">
-                <h1 className="font-bold text-3xl">{name}</h1>
-                <span className="text-gray-700 text-[16px]">Manage , Track and Follow up on all request Submits</span>
+                <h1 className="font-bold text-2xl sm:text-3xl">{name}</h1>
+                <span className="text-gray-700 text-sm sm:text-base">Manage, track and follow up on all submitted requests</span>
             </div>
             
             <div className="w-full overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
-                <div className="flex h-[10vh] w-full items-center justify-start gap-4 bg-white px-4">
+                <div className="flex w-full flex-col sm:flex-row items-stretch sm:items-center justify-start gap-3 bg-white p-3 sm:p-4">
 
                     <input
                         type="text"
                         placeholder="Search tickets..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-1/4 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-300"
+                        className="w-full sm:w-1/3 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-300"
                     />
 
                     <select
@@ -83,7 +83,7 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
 
                 </div>
 
-                <table className="w-full text-left text-sm">
+                <table className="w-full min-w-[760px] text-left text-sm">
                     <thead className="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
                         <tr>
                             <th className={tableRowStyle}>SN</th>
@@ -113,7 +113,7 @@ const Ticket:React.FC<props> = ({name , tickets}) => {
                                     className="text-center transition-colors hover:bg-blue-50/40"
                                 >
                                     <td className="whitespace-nowrap px-6 py-4 font-medium text-gray-500">
-                                        #{String(index + 1).padStart(3, "0")}
+                                       {index+1}
                                     </td>
 
                                     <td className="px-6 py-4">

@@ -14,6 +14,7 @@ const ProtectRoute = ({ isAuthenticated, role }: PrivateProps) => {
     }
 
     const allowedRoutes = [
+        "/",
         "/my-ticket",
         "/edit/",
         "/ticket/",
@@ -23,6 +24,7 @@ const ProtectRoute = ({ isAuthenticated, role }: PrivateProps) => {
     ]
 
     const SupportAgentRoute = [
+        "/",
         "/my-ticket",
         "/edit/",
         "/ticket/",

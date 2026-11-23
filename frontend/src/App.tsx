@@ -17,6 +17,7 @@ import Profile from './pages/Profile'
 import Singleuser from './pages/Singleuser'
 import EditUser from './auth/EditUser'
 import MyTeam from './pages/MyTeam'
+import Dashboard from './pages/Dashboard'
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
                 <Route element={<ProtectRoute isAuthenticated={isAuthenticated} role={role} />}>
                     <Route path="/" element={<Home />}>
 
+                        <Route index element={<Dashboard />} />
                         <Route path='/profile' element={<Profile />} />
                         <Route path='/edit/:id' element={<EditUser />} />
                         <Route path="tickets" element={<AllTicket />} />
